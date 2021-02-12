@@ -59,8 +59,8 @@ class Grafo:
         return self.grafo[v]
     
     def peso_union(self, v, w):
-        if v not in self.grafo or w not in self.grafo:
-            raise KeyError("El/Los vertice/s no pertenece/n al grafo")
+        if not self.estan_unidos(v, w): 
+            raise Exception("Los vertices no se encuntran unidos")
 
         return self.grafo[v][w]
     
