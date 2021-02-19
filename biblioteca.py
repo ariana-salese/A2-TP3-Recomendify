@@ -1,7 +1,6 @@
 from grafo import Grafo
 from csv import DictReader
 
-
 def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
     '''
     Recibe un archivo tsv y cuatro parametros del header. Crea y devuelve un grafo
