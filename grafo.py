@@ -1,6 +1,6 @@
 from random import choice
 
-#ERROR_VERTICES = KeyError("El/Los vertice/s no pertenece/n al grafo")
+ERROR_VERTICES = KeyError("El/Los vertice/s no pertenece/n al grafo")
 ERROR_VERTICE = KeyError("El vertice no pertenece al grafo")
 ERROR_UNION = Exception("Los vertices no se encuntran unidos")
 

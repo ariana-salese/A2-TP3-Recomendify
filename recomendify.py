@@ -1,8 +1,6 @@
 import biblioteca
 import sys
 
-CANTIDAD_ARCHIVOS = 1
-
 '''
 Comento los que no se si vamos a usar, cuando nos organizamos borramos lo que 
 sobra
@@ -12,7 +10,7 @@ USER_ID = 'USER_ID'
 TRACK_NAME = 'TRACK_NAME'	
 ARTIST = 'ARTIST' 
 PLAYLIST_ID	= 'PLAYLIST_ID'
-#PLAYLIST_NAME = 'PLAYLIST_NAME'
+PLAYLIST_NAME = 'PLAYLIST_NAME'
 #GENRES = 'GENRES'
 
 '''
@@ -61,6 +59,14 @@ def clustering(cancion):
 
 '''
 -----------------------------------------------------------------
+                  PROCESAMIENTO DE ENTRADA
+-----------------------------------------------------------------
+'''
+
+
+
+'''
+-----------------------------------------------------------------
                      PROGRAMA PRINCIPAL
 -----------------------------------------------------------------
 '''
@@ -69,6 +75,7 @@ def main(ruta_archivo):
 
     #grafo_canciones = crear_grafo()
 
-    grafo_usuarios = biblioteca.crear_grafo_con_archivo(ruta_archivo, USER_ID, TRACK_NAME, ARTIST)
+    grafo_usuarios = biblioteca.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
+
 
 main(sys.argv[1])
