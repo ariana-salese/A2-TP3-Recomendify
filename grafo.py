@@ -1,69 +1,144 @@
-import random 
+from random import choice
+
+ERROR_VERTICES = KeyError("El/Los vertice/s no pertenece/n al grafo")
+ERROR_VERTICE = KeyError("El vertice no pertenece al grafo")
+ERROR_UNION = Exception("Los vertices no se encuntran unidos")
 
 class Grafo:
+    '''
+    Representa un grafo, el cual podra ser dirigido o no.
+    '''
     def __init__(self, es_dirigido = False):
+        '''
+        Crea el grafo vacio y no dirigido si se recibe False o nada por 
+        parametro, o dirigido si se recibe True.
+        '''
         self.grafo = {}
-        self.cantidad_vertices = 0
         self.es_dirigido = es_dirigido
     
     def __iter__(self):
-        return iter(self.grafo.keys())
+        '''
+        Itera por los vertices del grafo.
+        '''
+        return iter(self.grafo)
 
     def __len__(self):
-        return self.cantidad_vertices
+        '''
+        Devuelve la cantidad de vertices del grafo.
+        '''
+        return len(self.grafo)
     
     def __str__(self):
+        '''
+        Imprime el grafo con el formato {vertice_i: {adyacente_j: peso_i_j}}}.
+        '''
         return str(self.grafo)
-
+  
+    def existe_vertice(self, v):
+        '''
+        Devuelve True si el vertice v pertence al grafo.
+        '''
+        return v in self.grafo
+ 
     def agregar_vertice(self, v):
-        self.grafo[v] = {}
-        self.cantidad_vertices += 1  
+        '''
+        Agrega el vertice v al grafo.
+        '''
+        self.grafo[v] = {} 
 
-    def agregar_arista(self, v, w, peso = 0): 
-        if v not in self.grafo or w not in self.grafo:
-            raise KeyError("El/Los vertice/s no pertenece/n al grafo")
+    def agregar_arista(self, v, w, peso = 0):
+        '''
+        Agrega la arista v--peso--w o v<-peso->w en caso de ser dirigido.
+        Si no se recibe peso se le asiga peso cero.
+
+        Levanta error si: uno o ambos vertices no existen.
+        '''
+        if v not in self.grafo or w not in self.grafo: raise ERROR_VERTICES
 
         self.grafo[v][w] = peso
         if not self.es_dirigido: self.grafo[w][v] = peso
-    
-    def obtener_vertice_random(self):
-        return random.choice(list(self.grafo.keys()))
 
     def eliminar_vertice(self, v):
-        if v not in self.grafo:
-            raise KeyError("El vertice no pertenece al grafo")
-        
+        '''
+        Elimina el vertice del grafo y todas las aristas con las que se
+        relaciona.
+
+        Levanta error si: el vertice v no existe
+        '''
+        if v not in self.grafo: raise ERROR_VERTICE
+
         self.grafo.pop(v)
-        self.cantidad_vertices -= 1
 
         for w in self.grafo:
             if v in self.grafo[w]:
                 self.grafo[w].pop(v)
 
     def estan_unidos(self, v, w):
-        if v not in self.grafo or w not in self.grafo:
-            raise KeyError("El/Los vertice/s no pertenece/n al grafo")
+        '''
+        Devuelve True si v y w estan unidos.
+
+        Levanta error si: uno o ambos vertices no existen.
+        '''
+        if v not in self.grafo or w not in self.grafo: raise ERROR_VERTICES
 
         return v in self.grafo[w] 
-
-    def existe_vertice(self, v):
-        return v in self.grafo
+    
+    def obtener_vertice_random(self):
+        '''
+        Devuelve un vertice aleatorio.
+        '''
+        return choice(list(self.grafo))  
 
     def obtener_vertices(self):
-        return [v for v in self.grafo]
+        '''
+        Devuelve una lista con todos lo vertices del grafo.
+        '''
+        return list(self.grafo)
+    
+    def obtener_aristas(self):
+        '''
+        Devuelve una lista de tuplas con todos las aristas del grafo con el 
+        formato (v, w, peso) = v--peso->w (dirigido) o v<-peso->w (no dirigido).
+        '''
+        aristas = []
+
+        for v in self.grafo:
+            for w in self.grafo[v]:
+                arista = (v, w, self.grafo[v][w])
+                if self.es_dirigido: 
+                    aristas.append(arista)
+
+                elif not self.es_dirigido and (w, v, self.grafo[v][w]) not in aristas: 
+                    aristas.append(arista)
+        
+        return aristas
 
     def obtener_adyacentes(self, v):
-        if v not in self.grafo:
-            raise KeyError("El vertice no pertenece al grafo")
+        '''
+        Devuelve una lista con los adyacentes de v. 
+
+        Levanta error si: el vertice v no existe
+        '''
+        if v not in self.grafo: raise ERROR_VERTICE
 
         return self.grafo[v]
     
     def peso_union(self, v, w):
-        if not self.estan_unidos(v, w): 
-            raise Exception("Los vertices no se encuntran unidos")
+        '''
+        Devuelve el peso de la arista que une a v y w.
+
+        Levanta error si:
+        - uno o ambos vertices no existen.
+        - v y w no se encuentran unidos. 
+        '''
+
+        if v not in self.grafo or w not in self.grafo: raise ERROR_VERTICES
+
+        if not self.estan_unidos(v, w): raise ERROR_UNION
 
         return self.grafo[v][w]
-    
+
+
 #PRUEBAS (ELIMINAR)
 
 '''

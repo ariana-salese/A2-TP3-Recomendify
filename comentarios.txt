@@ -1,4 +1,10 @@
+para ejecutar: python3 recomendify.py mini_prueba.tsv
+
 A ELIMINAR: 
 
 grafo.py:
 -PRUEBAS
+
+archivos:
+nuestras_pruebas.py
+mini_prueba.tsv
