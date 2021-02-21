@@ -22,3 +22,45 @@ def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
             if not grafo.estan_unidos(vertice_1, vertice_2): grafo.agregar_arista(vertice_1, vertice_2, peso)
     
     return grafo
+
+'''
+IDEA GENERAL:
+1. Si encontre solucion devuelvo el camino
+2. Agrego un adyacente, si no es solucion posible vuelvo
+3. No existe solucion
+'''
+
+def _ciclo_n(grafo, n, origen, v, visitados, camino):
+    '''
+    Doc
+    '''
+    visitados.add(v)
+    camino.append(v)
+
+    if len(camino) == n: 
+        if origen in grafo.obtener_adyacentes(v): return camino
+        return None
+    
+    for w in grafo.obtener_adyacentes(v):
+        if w in visitados: continue
+
+        if _ciclo_n(grafo, n, origen, w, visitados, camino) in not None: return solucion
+
+    camino.remove(v)
+    visitados.pop(v)
+    
+    return None
+    
+
+def ciclo_n(grafo, n, origen):
+    '''
+    Doc
+    '''
+    camino = []
+    visitados = set()
+
+    return _ciclo_n(grafo, n, origen, origen, visitados, camino)
+
+    
+
+

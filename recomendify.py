@@ -86,11 +86,12 @@ def recomendacion(usuario_cancion, n):
     '''
     pass
 
-def ciclo(n, cancion):
+def ciclo(grafo_canciones, n, cancion):
     '''
     documentacion
     '''
-    pass
+    ciclo = biblioteca.ciclo_n(grafo_canciones, n, cancion)
+
 
 def rango(n, cancion):
     '''
@@ -132,7 +133,7 @@ def clustering(cancion):
 # -> CLUSTERING
 # clustering Teenage Dream - Katy Perry
 
-def procesar_entrada():
+def procesar_entrada(grafo_canciones, grafo_usuarios):
     
     for linea in sys.stdin:
         linea = linea.rstrip("\n")
@@ -158,7 +159,7 @@ def procesar_entrada():
             cancion, _ = concatenar_cadenas(cadenas, 2)
             nombre_cancion, artista = cancion.split(SEP_CANCION_ARTISTA)
 
-            ciclo(cadenas[INDICE_N], (nombre_cancion, artista))
+            ciclo(grafo_canciones, cadenas[INDICE_N], (nombre_cancion, artista))
     
         elif comando == RANGO:
             cancion, _ = concatenar_cadenas(cadenas, 2)
@@ -187,6 +188,6 @@ def main(ruta_archivo):
 
     grafo_usuarios = biblioteca.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
 
-    procesar_entrada()
+    procesar_entrada(grafo_canciones, grafo_usuarios)
 
 main(sys.argv[1])
