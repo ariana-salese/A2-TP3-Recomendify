@@ -8,3 +8,6 @@ grafo.py:
 archivos:
 nuestras_pruebas.py
 mini_prueba.tsv
+
+recomendify.py:
+elemplos de entradas

@@ -23,14 +23,12 @@ CICLO = "ciclo"
 RANGO = "rango"
 CLUSTERING = "clustering"
 
-COMANDOS = {CAMINO: camino, MAS_IMPORTANTES: mas_importantes, RECOMENDACION: recomendacion, CICLO: ciclo, RANGO: rango, CLUSTERING: clustering}
-
 # CARACTERES 
 SEP_CANCIONES = '>>>>'
 SEP_CANCION_ARTISTA = ' - '
 
 # INDICES
-INDICE_CANCIO = 0
+INDICE_CANCION = 0
 INDICE_ARTISTA = 1
 INDICE_N = 1
 INDICE_USUARIO_O_CANCION = 1
@@ -146,9 +144,9 @@ def procesar_entrada():
             destino, _ = concatenar_cadenas(cadenas, ultimo_indice + 1)
 
             nombre_cancion_origen, artista_origen = origen.split(SEP_CANCION_ARTISTA)
-            nombre_cancion_destino, artista_detino = destino.split(SEP_CANCION_ARTISTA)
+            nombre_cancion_destino, artista_destino = destino.split(SEP_CANCION_ARTISTA)
 
-            camino((nombre_cancion_destino, artista_detino), (nombre_cancion_destino, artista_detino))
+            camino((nombre_cancion_origen, artista_origen), (nombre_cancion_destino, artista_destino))
         
         elif comando == MAS_IMPORTANTES:
             mas_importantes(cadenas[INDICE_N])
