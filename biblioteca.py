@@ -1,4 +1,6 @@
 from grafo import Grafo
+from cola import Cola
+from pila import Pila
 from csv import DictReader
 
 def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
@@ -22,3 +24,57 @@ def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
             if not grafo.estan_unidos(vertice_1, vertice_2): grafo.agregar_arista(vertice_1, vertice_2, peso)
     
     return grafo
+
+def camino_minimo(grafo, origen, destino):
+
+    '''
+    Recibe un grafo, un vértice de origen y uno de destino. 
+    Devuelve una lista del recorrido mínimo, donde se incluye
+    el peso entre las aristas.
+    Si no se encuentra camino devuelve None.
+    '''
+
+    visitados = set()
+    padres = {}
+    q = Cola()
+    visitados.add(origen)
+    padres[origen] = None
+    destino_encontrado = False
+    q.encolar(origen)
+    
+    while not (q.esta_vacia() or destino_encontrado):
+
+        v = q.desencolar()
+
+        for w in grafo.obtener_adyacentes(v):
+
+            if destino_encontrado: break
+
+            if w not in visitados:
+
+                visitados.add(w)
+                padres[w] = (v, grafo.peso_union(v,w))
+                q.encolar(w)
+
+                if w == destino: destino_encontrado = True
+
+    if not destino_encontrado:
+        return None
+
+    s = Pila()
+    s.apilar(destino)
+    #Apilo los vértices desde el destino al origen para porder invertir el orden
+    while s.ver_tope() != origen: 
+
+        actual = s.ver_tope()
+        padre_actual = padres[actual][0]
+
+        s.apilar(padres[actual][1]) #Apilo el peso entre el actual y su padre
+        s.apilar(padre_actual) #Apilo el padre
+
+    recorrido = []
+
+    while not s.esta_vacia():
+        recorrido.append(s.desapilar())
+
+    return recorrido
