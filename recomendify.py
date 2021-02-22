@@ -1,6 +1,7 @@
 import biblioteca
 import sys
 import mensajes
+import strutil
 
 # HEADERS
 '''
@@ -32,35 +33,6 @@ INDICE_CANCION = 0
 INDICE_ARTISTA = 1
 INDICE_N = 1
 INDICE_USUARIO_O_CANCION = 1
-'''
------------------------------------------------------------------
-                     FUNCIONES AUXILIARES
------------------------------------------------------------------
-'''
-
-#Hacemos una biblioteca aparte para el manejo de cadenas?
-#Cambiamos el nombre la bibliteca de grafos a algo como grafos graphutilies or smth like that?
-
-def concatenar_cadenas(cadenas, indice_inicio, cadena_fin = None):
-    '''
-    Recibe: una lista de cadenas, indice de inicio (indice_inicio) y una cadena final (cadena_fin).
-
-    Devuelve una cadena resultante concatenando desde la cadena que se encuentra en el indice_inicio
-    hasta la cadena_fin (no inclusive), ademas del indice en el que se encuentra la cadena_fin. Si
-    cadena_fin es None se concatena hasta el final de la lista y se devuelve el indice de la ultima
-    cadena existente. 
-    '''
-    cadena_resultante = ''
-
-    for i in range(indice_inicio, len(cadenas)):
-        cadena_actual = cadenas[i] 
-
-        if cadena_actual == cadena_fin: return cadena_resultante[:-1], i
-
-        cadena_resultante += cadena_actual + ' '
-
-    return cadena_resultante[:-1], len(cadenas) - 1
-
 
 '''
 -----------------------------------------------------------------
@@ -88,10 +60,20 @@ def recomendacion(usuario_cancion, n):
 
 def ciclo(grafo_canciones, n, cancion):
     '''
-    documentacion
-    '''
-    ciclo = biblioteca.ciclo_n(grafo_canciones, n, cancion)
+    Recibe un grafo de canciones, una cancion y un largo n, e imprime un ciclo
+    de largo n cuyo origen es la cancion con el formato:
 
+    cancion_a - artista_a --> cancion_b - artista_b... 
+
+    Si el ciclo no existe imprime el mensaje: 'No se encontro recorrido'.
+    '''
+    ciclo = biblioteca.ciclo_largo_n(grafo_canciones, n, cancion)
+
+    if ciclo is None: 
+        print(mensajes.ENOENT_RECORRIDO)
+        return 
+    
+    strutil.imprimir_lista(ciclo, SEP_CANCION_ARTISTA)
 
 def rango(n, cancion):
     '''
@@ -133,7 +115,7 @@ def clustering(cancion):
 # -> CLUSTERING
 # clustering Teenage Dream - Katy Perry
 
-def procesar_entrada(grafo_canciones, grafo_usuarios):
+def procesar_entrada():
     
     for linea in sys.stdin:
         linea = linea.rstrip("\n")
@@ -141,8 +123,8 @@ def procesar_entrada(grafo_canciones, grafo_usuarios):
         comando = cadenas[0]
 
         if comando == CAMINO:
-            origen, ultimo_indice = concatenar_cadenas(cadenas, 1, SEP_CANCIONES)
-            destino, _ = concatenar_cadenas(cadenas, ultimo_indice + 1)
+            origen, ultimo_indice = strutil.concatenar_cadenas(cadenas, 1, SEP_CANCIONES)
+            destino, _ = strutil.concatenar_cadenas(cadenas, ultimo_indice + 1)
 
             nombre_cancion_origen, artista_origen = origen.split(SEP_CANCION_ARTISTA)
             nombre_cancion_destino, artista_destino = destino.split(SEP_CANCION_ARTISTA)
@@ -156,19 +138,19 @@ def procesar_entrada(grafo_canciones, grafo_usuarios):
             pass
 
         elif comando == CICLO:
-            cancion, _ = concatenar_cadenas(cadenas, 2)
+            cancion, _ = strutil.concatenar_cadenas(cadenas, 2)
             nombre_cancion, artista = cancion.split(SEP_CANCION_ARTISTA)
 
-            ciclo(grafo_canciones, cadenas[INDICE_N], (nombre_cancion, artista))
+            ciclo(grafo_canciones, int(cadenas[INDICE_N]), (nombre_cancion, artista))
     
         elif comando == RANGO:
-            cancion, _ = concatenar_cadenas(cadenas, 2)
+            cancion, _ = strutil.concatenar_cadenas(cadenas, 2)
             nombre_cancion, artista = cancion.split(SEP_CANCION_ARTISTA)
 
             rango(cadenas[INDICE_N], (nombre_cancion, artista))
 
         elif comando == CLUSTERING:
-            cancion, _= concatenar_cadenas(cadenas, 1)
+            cancion, _= strutil.concatenar_cadenas(cadenas, 1)
             nombre_cancion, artista = cancion.split(SEP_CANCION_ARTISTA)
 
             clustering((nombre_cancion, artista))
@@ -184,10 +166,10 @@ def procesar_entrada(grafo_canciones, grafo_usuarios):
 
 def main(ruta_archivo):
 
-    #grafo_canciones = crear_grafo()
+    grafo_canciones = biblioteca.crear_grafo_canciones_provisorio(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
 
     grafo_usuarios = biblioteca.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
 
-    procesar_entrada(grafo_canciones, grafo_usuarios)
+    procesar_entrada()
 
 main(sys.argv[1])
