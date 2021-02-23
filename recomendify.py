@@ -80,9 +80,7 @@ def camino(grafo_usuarios, origen, destino):
     	print("Tanto el origen como el destino deben ser canciones")
     	return
 
-    recorrido = []
-
-    recorrido = biblioteca.camino_minimo(grafo_usuarios, origen, destino)
+    recorrido =  biblioteca.camino_minimo(grafo_usuarios, origen, destino)
 
     if not recorrido: 
     	print("No se encontro recorrido")
@@ -109,10 +107,8 @@ def camino(grafo_usuarios, origen, destino):
     		print(f"{recorrido[i][0]} - {recorrido[i][1]}", end='')
     	else:
     		print(f"{recorrido[i]}", end='')
-    		
-    print("")
 
-    return
+    print("")
 
 def mas_importantes(n):
     '''
@@ -233,6 +229,7 @@ def main(ruta_archivo):
     #grafo_canciones = crear_grafo()
 
     grafo_usuarios = biblioteca.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
+    print("SE CREO!")
 
     procesar_entrada(grafo_usuarios)
 
