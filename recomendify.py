@@ -115,7 +115,7 @@ def clustering(cancion):
 # -> CLUSTERING
 # clustering Teenage Dream - Katy Perry
 
-def procesar_entrada():
+def procesar_entrada(grafo_canciones):
     
     for linea in sys.stdin:
         linea = linea.rstrip("\n")
@@ -170,6 +170,6 @@ def main(ruta_archivo):
 
     grafo_usuarios = biblioteca.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
 
-    procesar_entrada()
+    procesar_entrada(grafo_canciones)
 
 main(sys.argv[1])

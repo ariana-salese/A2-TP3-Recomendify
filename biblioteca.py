@@ -58,7 +58,7 @@ def _ciclo_largo_n(grafo, n, origen, v, visitados, camino):
     Recibe un grafo, un origen, un largo n y un vertice actual. Devuelve una 
     lista de vertices que representa un ciclo de largo n que comienza en el
     origen. Si este no existe, devuelve None. 
-    '''
+    '''    
     visitados.add(v)
     camino.append(v)
 
@@ -72,9 +72,9 @@ def _ciclo_largo_n(grafo, n, origen, v, visitados, camino):
         solucion = _ciclo_largo_n(grafo, n, origen, w, visitados, camino)
 
         if solucion is not None: return solucion
-
-    camino.remove(v)
-    visitados.remove(v)
+                 
+        camino.pop()
+        visitados.remove(w)
     
     return None
     
