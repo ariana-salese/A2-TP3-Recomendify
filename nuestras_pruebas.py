@@ -35,6 +35,17 @@ def concatenar_cadenas(cadenas, indice_inicio, cadena_fin = None):
 
     return cadena_resultante[:-1], len(cadenas) - 1
 
+def ciclo(grafo_canciones, n, cancion):
+    '''
+    documentacion
+    '''
+    ciclo = biblioteca.ciclo_n(grafo_canciones, n, cancion)
+    
+    for cancion_act, artista_act in ciclo: print(f"{cancion_act}{SEP_CANCION_ARTISTA}{artista_act} --> ")
+
+    cancion_act, artista_act = cancion
+    print(f"{cancion_act}{SEP_CANCION_ARTISTA}{artista_act}")
+
 '''
 -----------------------------------------------------------------
                            PRUEBAS
@@ -124,12 +135,57 @@ def prueba_concatenar_cadenas():
 
     print(f"El origen es: {origen.split(SEP_CANCION_ARTISTA)} \nEl destino es {destino.split(SEP_CANCION_ARTISTA)}")
 
+def prueba_crear_grafo_canciones():
+    grafo = biblioteca.crear_grafo_canciones_provisorio('mini_prueba.tsv', PLAYLIST_ID, TRACK_NAME, ARTIST)
+
+    #print(grafo)
+    for w in grafo.obtener_adyacentes(('Shape Of You', 'Ed Sheeran')): print(w)
+    '''
+    ('Eraser', 'Ed Sheeran')
+    ('Castle On The Hill', 'Ed Sheeran')
+    ('Dive', 'Ed Sheeran')
+    ('Perfect', 'Ed Sheeran')
+    ('Galway Girl', 'Ed Sheeran')
+    ('Happier', 'Ed Sheeran')
+    ("Hearts Don't Break Around Here", 'Ed Sheeran')
+    '''
+    for w in grafo.obtener_adyacentes(('Always','Bon Jovi')): print(w)
+    '''
+    ("It's My Life", 'Bon Jovi')
+    ("Livin' On A Prayer", 'Bon Jovi')
+    ('Misunderstood', 'Bon Jovi')
+    ("I'll Be There For You", 'Bon Jovi')
+    ('Thank You For Loving Me', 'Bon Jovi')
+    ('You Give Love A Bad Name', 'Bon Jovi')
+    ('Bed Of Roses', 'Bon Jovi')
+    ('Wanted Dead Or Alive', 'Bon Jovi')
+    ('Never Say Goodbye', 'Bon Jovi')
+    ('All I Wanna do Is You', 'Bon Jovi')
+    ('Blaze Of Glory', 'Bon Jovi')
+    ('Crazy', 'Bon Jovi')
+    ('I Thank You', 'Bon Jovi')
+    '''
+
+def prueba_ciclo_n():
+    grafo = biblioteca.crear_grafo_canciones_provisorio('mini_prueba.tsv', PLAYLIST_ID, TRACK_NAME, ARTIST)
+
+    ciclo_3 = biblioteca.ciclo_n(grafo, 3, ('Dive', 'Ed Sheeran'))
+
+    print(ciclo_3)
+    print(f"El origen (('Dive', 'Ed Sheeran')) es adyacente al ultimo vertice (('Castle On The Hill', 'Ed Sheeran')): {('Dive', 'Ed Sheeran') in grafo.obtener_adyacentes((('Castle On The Hill', 'Ed Sheeran')))}")
+
+    ciclo_4 = biblioteca.ciclo_n(grafo, 4, ('Dive', 'Ed Sheeran'))
+
+    print(ciclo_4)
+    print(f"El origen (('Dive', 'Ed Sheeran')) es adyacente al ultimo vertice (('Shape Of You', 'Ed Sheeran')): {('Dive', 'Ed Sheeran') in grafo.obtener_adyacentes((('Shape Of You', 'Ed Sheeran')))}")
 
 def main():
     #leer_archivo_tsv()
     #crear_grafo_usuarios()
     #procesar_entrada_1()
     #procesar_entrada_2() #clearly nicer 
-    prueba_concatenar_cadenas()
+    #prueba_concatenar_cadenas()
+    #prueba_crear_grafo_canciones()
+    prueba_ciclo_n()
 
 main()
