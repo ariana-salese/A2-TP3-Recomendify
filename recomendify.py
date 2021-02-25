@@ -40,11 +40,47 @@ INDICE_USUARIO_O_CANCION = 1
 -----------------------------------------------------------------
 '''
 
-def camino(origen, destino):
+def camino(grafo_usuarios, origen, destino):
     '''
-    documentacion
+    Recibe un grafo bipartito que relaciona usuarios con canciones, y dos canciones, una de 
+    origen y otra de destino. Imprime el camino más corto entre la canción de origen y destino.
+    Tanto si el origen o destino no son canciones válidas como si no existe camino entre las 
+    canciones, se imprimirá el error correspondiente.
     '''
-    pass
+
+    if not (grafo_usuarios.existe_vertice(origen) and grafo_usuarios.existe_vertice(destino)):
+    	print("Tanto el origen como el destino deben ser canciones")
+    	return
+
+    recorrido = biblioteca.camino_minimo(grafo_usuarios, origen, destino)
+
+    if not recorrido: 
+    	print("No se encontro recorrido")
+    	return
+
+    print(f"{origen[0]} - {origen[1]}", end='')
+
+    for i in range(1,len(recorrido)):
+
+    	print(" --> ", end='')
+
+    	if i%4 == 0:
+    		print("donde aparece", end='')
+    	if i%4 == 1:
+    		print("aparece en playlist", end='')
+    	if i%4 == 2:
+    		print("de", end='')  		
+    	if i%4 == 3:
+    		print("tiene una playlist", end='')
+
+    	print(" --> ", end='')
+    	
+    	if i%4 == 0:
+    		print(f"{recorrido[i][0]} - {recorrido[i][1]}", end='')
+    	else:
+    		print(f"{recorrido[i]}", end='')
+
+    print("")
 
 def mas_importantes(n):
     '''
@@ -115,8 +151,8 @@ def clustering(cancion):
 # -> CLUSTERING
 # clustering Teenage Dream - Katy Perry
 
-def procesar_entrada(grafo_canciones):
-    
+def procesar_entrada(grafo_usuarios, grafo_canciones):
+
     for linea in sys.stdin:
         linea = linea.rstrip("\n")
         cadenas = linea.split()
@@ -126,10 +162,17 @@ def procesar_entrada(grafo_canciones):
             origen, ultimo_indice = strutil.concatenar_cadenas(cadenas, 1, SEP_CANCIONES)
             destino, _ = strutil.concatenar_cadenas(cadenas, ultimo_indice + 1)
 
-            nombre_cancion_origen, artista_origen = origen.split(SEP_CANCION_ARTISTA)
-            nombre_cancion_destino, artista_destino = destino.split(SEP_CANCION_ARTISTA)
+            origen_splitted = origen.split(SEP_CANCION_ARTISTA)
+            destino_splitted = destino.split(SEP_CANCION_ARTISTA)
 
-            camino((nombre_cancion_origen, artista_origen), (nombre_cancion_destino, artista_destino))
+            artista_origen = None
+            artista_destino = None
+
+            if len(origen_splitted) == 2 and len(destino_splitted) == 2:
+	            nombre_cancion_origen, artista_origen = origen.split(SEP_CANCION_ARTISTA)
+	            nombre_cancion_destino, artista_destino = destino.split(SEP_CANCION_ARTISTA)
+
+            camino(grafo_usuarios, (nombre_cancion_origen, artista_origen), (nombre_cancion_destino, artista_destino))
         
         elif comando == MAS_IMPORTANTES:
             mas_importantes(cadenas[INDICE_N])
@@ -169,7 +212,9 @@ def main(ruta_archivo):
     grafo_canciones = biblioteca.crear_grafo_canciones_provisorio(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
 
     grafo_usuarios = biblioteca.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
+    print("SE CREO!")
 
-    procesar_entrada(grafo_canciones)
+    procesar_entrada(grafo_usuarios, grafo_canciones)
+
 
 main(sys.argv[1])

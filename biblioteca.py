@@ -1,4 +1,6 @@
 from grafo import Grafo
+from cola import Cola
+from pila import Pila
 from csv import DictReader
 
 def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
@@ -89,4 +91,57 @@ def ciclo_largo_n(grafo, n, origen):
     visitados = set()
 
     return _ciclo_largo_n(grafo, n, origen, origen, visitados, camino)
+
+
+def camino_minimo(grafo, origen, destino):
+
+    '''
+    Recibe un grafo, un vértice de origen y uno de destino. 
+    Devuelve una lista del recorrido mínimo, donde se incluye
+    el peso entre las aristas.
+    Si no se encuentra camino devuelve None.
+    '''
+
+    visitados = set()
+    padre = {}
+    q = Cola() 
+    visitados.add(origen)
+    padre[origen] = None 
+    q.encolar(origen)
+    encontre_destino = False
+
+    while not q.esta_vacia() and not encontre_destino: 
+        v = q.desencolar()
+        for w in grafo.obtener_adyacentes(v): 
+            if w not in visitados: 
+                visitados.add(w)
+                padre[w] = v
+                q.encolar(w)
+                if w == destino: 
+                    encontre_destino = True
+                    break
+    
+    if not encontre_destino: return None
+
+    return reconstruir_camino(grafo, padre, destino)
+
+
+def reconstruir_camino(grafo, padre, destino):
+    '''
+    Reconstuye el camino desde el vertice cuyo padre es None hasta el destino.
+    Devuelve una lista con los vertices recorridos incuyendo los pesos que los 
+    une.
+    '''
+    destino_actual = destino
+    recorrido = []
+
+    while destino_actual is not None:
+        recorrido.append(destino_actual)
+
+        if padre[destino_actual] is not None: 
+            recorrido.append(grafo.peso_union(destino_actual, padre[destino_actual]))
+        
+        destino_actual = padre[destino_actual]
+
+    return recorrido[::-1]
 
