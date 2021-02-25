@@ -142,8 +142,8 @@ def procesar_entrada(grafo_usuarios, grafo_canciones):
             artista_destino = None
 
             if len(origen_splitted) == 2 and len(destino_splitted) == 2:
-	            nombre_cancion_origen, artista_origen = origen.split(SEP_CANCION_ARTISTA)
-	            nombre_cancion_destino, artista_destino = destino.split(SEP_CANCION_ARTISTA)
+	            nombre_cancion_origen, artista_origen = origen_splitted
+	            nombre_cancion_destino, artista_destino = destino_splitted
 
             camino(grafo_usuarios, (nombre_cancion_origen, artista_origen), (nombre_cancion_destino, artista_destino))
         
@@ -167,12 +167,14 @@ def procesar_entrada(grafo_usuarios, grafo_canciones):
 
         elif comando == CLUSTERING:
             if (len(cadenas)) == 1: 
-                print(graphutil.clustering_grafo(grafo_canciones))
+                coeficiente = graphutil.clustering_grafo(grafo_canciones)
             else:
                 cancion, _= strutil.concatenar_cadenas(cadenas, 1)
                 nombre_cancion, artista = cancion.split(SEP_CANCION_ARTISTA)
-
-                print(graphutil.clustering_vertice(grafo_canciones, (nombre_cancion, artista)))
+                
+                coeficiente = graphutil.clustering_vertice(grafo_canciones, (nombre_cancion, artista))
+        
+            print(strutil.redondear(coeficiente, 3))
 
         else: print(mensajes.ENOENT_COMANDO)
 

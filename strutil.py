@@ -18,6 +18,7 @@ def concatenar_cadenas(cadenas, indice_inicio, cadena_fin = None):
 
     return cadena_resultante[:-1], len(cadenas) - 1
 
+
 def imprimir_lista(lista, separador):
     '''
     Recibe una lista con el formato [(param_1a, param_2a), (param_1b, param_2b)] e imprime:
@@ -29,3 +30,20 @@ def imprimir_lista(lista, separador):
 
     print(f"{lista[0][0]}{separador}{lista[0][1]}")
 
+def redondear(n, decimales):
+    '''
+    Recibe un numero n y la cantidad de decimales. Se devuelve una cadena 
+    con n redondeado y con la cantidad de decimales dada.
+    '''
+    redondeado = str(round(n, decimales))
+
+    if len(redondeado) == 1: 
+        redondeado += "." + "0" * decimales
+        return redondeado 
+
+    cantidad_actual = len(redondeado.split('.')[1])
+
+    if decimales != cantidad_actual: 
+        redondeado += "0" * (decimales - cantidad_actual) 
+    
+    return redondeado
