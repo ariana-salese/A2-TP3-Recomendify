@@ -46,10 +46,12 @@ def camino_minimo(grafo, origen, destino):
         v = q.desencolar()
         for w in grafo.obtener_adyacentes(v): 
             if w not in visitados: 
-                if w == destino: encontre_destino = True
                 visitados.add(w)
                 padre[w] = v
                 q.encolar(w)
+                if w == destino: 
+                    encontre_destino = True
+                    break
     
     if not encontre_destino: return None
 
@@ -61,11 +63,15 @@ def reconstruir_camino(grafo, padre, destino):
     Devuelve una lista con los vertices recorridos incuyendo los pesos que los 
     une.
     '''
-
+    destino_actual = destino
     recorrido = []
-    while destino is not None:
-        recorrido.append(destino)
-        if padre[destino] is not None: recorrido.append(grafo.peso_union(destino, padre[destino]))
-        destino = padre[destino]
+
+    while destino_actual is not None:
+        recorrido.append(destino_actual)
+
+        if padre[destino_actual] is not None: 
+            recorrido.append(grafo.peso_union(destino_actual, padre[destino_actual]))
+        
+        destino_actual = padre[destino_actual]
 
     return recorrido[::-1]

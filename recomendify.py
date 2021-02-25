@@ -80,7 +80,7 @@ def camino(grafo_usuarios, origen, destino):
     	print("Tanto el origen como el destino deben ser canciones")
     	return
 
-    recorrido =  biblioteca.camino_minimo(grafo_usuarios, origen, destino)
+    recorrido = biblioteca.camino_minimo(grafo_usuarios, origen, destino)
 
     if not recorrido: 
     	print("No se encontro recorrido")
