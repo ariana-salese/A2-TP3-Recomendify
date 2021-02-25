@@ -35,46 +35,43 @@ def camino_minimo(grafo, origen, destino):
     '''
 
     visitados = set()
-    padres = {}
-    q = Cola()
+    padre = {}
+    q = Cola() 
     visitados.add(origen)
-    padres[origen] = None
-    destino_encontrado = False
+    padre[origen] = None 
     q.encolar(origen)
-    
-    while not (q.esta_vacia() or destino_encontrado):
+    encontre_destino = False
 
+    while not q.esta_vacia() and not encontre_destino: 
         v = q.desencolar()
-
-        for w in grafo.obtener_adyacentes(v):
-
-            if destino_encontrado: break
-
-            if w not in visitados:
-
+        for w in grafo.obtener_adyacentes(v): 
+            if w not in visitados: 
                 visitados.add(w)
-                padres[w] = (v, grafo.peso_union(v,w))
+                padre[w] = v
                 q.encolar(w)
+                if w == destino: 
+                    encontre_destino = True
+                    break
+    
+    if not encontre_destino: return None
 
-                if w == destino: destino_encontrado = True
+    return reconstruir_camino(grafo, padre, destino)
 
-    if not destino_encontrado:
-        return None
-
-    s = Pila()
-    s.apilar(destino)
-    #Apilo los vértices desde el destino al origen para porder invertir el orden
-    while s.ver_tope() != origen: 
-
-        actual = s.ver_tope()
-        padre_actual = padres[actual][0]
-
-        s.apilar(padres[actual][1]) #Apilo el peso entre el actual y su padre
-        s.apilar(padre_actual) #Apilo el padre
-
+def reconstruir_camino(grafo, padre, destino):
+    '''
+    Reconstuye el camino desde el vertice cuyo padre es None hasta el destino.
+    Devuelve una lista con los vertices recorridos incuyendo los pesos que los 
+    une.
+    '''
+    destino_actual = destino
     recorrido = []
 
-    while not s.esta_vacia():
-        recorrido.append(s.desapilar())
+    while destino_actual is not None:
+        recorrido.append(destino_actual)
 
-    return recorrido
+        if padre[destino_actual] is not None: 
+            recorrido.append(grafo.peso_union(destino_actual, padre[destino_actual]))
+        
+        destino_actual = padre[destino_actual]
+
+    return recorrido[::-1]
