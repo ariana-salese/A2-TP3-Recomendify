@@ -2,6 +2,7 @@ from grafo import Grafo
 from cola import Cola
 from pila import Pila
 from csv import DictReader
+from strutil import redondear
 
 def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
     '''
@@ -144,4 +145,32 @@ def reconstruir_camino(grafo, padre, destino):
         destino_actual = padre[destino_actual]
 
     return recorrido[::-1]
+    
 
+def clustering_vertice(grafo, vertice):
+    '''
+    Devuelve el coficiente de clustering del vertice.
+    '''
+    ady = grafo.obtener_adyacentes(vertice)
+    cant_ady = len(ady)
+    cant_conecciones = 0
+
+    if cant_ady < 2: return 0
+
+    for w in ady:
+        for x in grafo.obtener_adyacentes(w):
+            if x in ady: cant_conecciones += 1
+
+    return (cant_conecciones) / (cant_ady * (cant_ady - 1))
+
+
+def clustering_grafo(grafo):
+    '''
+    Devuelve el coficiente de clustering del grafo.
+    '''
+    coeficientes = 0
+
+    for v in grafo:
+        coeficientes += clustering_vertice(grafo, v)
+    
+    return coeficientes / len(grafo)
