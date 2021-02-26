@@ -2,7 +2,13 @@ from grafo import Grafo
 from cola import Cola
 from pila import Pila
 from csv import DictReader
+import sys
+import csv
 from strutil import redondear
+
+csv.field_size_limit(sys.maxsize)
+
+D = 0.85
 
 def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
     '''
@@ -174,3 +180,35 @@ def clustering_grafo(grafo):
         coeficientes += clustering_vertice(grafo, v)
     
     return coeficientes / len(grafo)
+
+def pagerank(grafo):
+	'''
+	Devuelve una lista con el pagerank de cada nodo
+	'''
+
+	dict_pgrnk = {}
+
+	#Inicializo el diccionario
+	for nodo in grafo:
+		dict_pgrnk[nodo] = 1 / len(grafo)
+
+	result = _pagerank(grafo, dict_pgrnk, 10)
+
+	return [dato[0] for dato in sorted(result.items(), key=lambda x: x[1], reverse=True)]
+
+def _pagerank(grafo, dict_pgrnk, n, cont = 0):
+
+	new_dict_pgrnk = {}
+
+	for nodo in dict_pgrnk:
+		pgrnk_sum = 0
+		for ady in grafo.obtener_adyacentes(nodo):
+			pgrnk_sum += dict_pgrnk[ady] / len(grafo.obtener_adyacentes(ady))
+		new_dict_pgrnk[nodo] = ((1 - D) / len(grafo)) + D * pgrnk_sum
+
+	cont+= 1
+		
+	if cont < n:
+		_pagerank(grafo, new_dict_pgrnk, n, cont)
+
+	return new_dict_pgrnk
