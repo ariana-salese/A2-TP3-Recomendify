@@ -91,7 +91,7 @@ def mas_importantes(grafo_canciones, n, pagerank):
     if not pagerank:
         pagerank = graphutil.pagerank(grafo_canciones)
 
-    strutil.imprimir_lista(pagerank[:n], SEP_CANCION_ARTISTA)
+    strutil.imprimir_lista(pagerank[:n], SEP_CANCION_ARTISTA, ";")
 
     return pagerank
 
@@ -116,7 +116,7 @@ def ciclo(grafo_canciones, n, cancion):
         print(mensajes.ENOENT_RECORRIDO)
         return 
     
-    strutil.imprimir_lista(ciclo, SEP_CANCION_ARTISTA)
+    strutil.imprimir_lista(ciclo, SEP_CANCION_ARTISTA, " --> ", True)
 
 def rango(n, cancion):
     '''
