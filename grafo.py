@@ -86,7 +86,7 @@ class Grafo:
         '''
         if v not in self.grafo or w not in self.grafo: raise ERROR_VERTICES
 
-        return v in self.grafo[w] 
+        return w in self.grafo[v] 
     
     def obtener_vertice_random(self):
         '''
@@ -143,4 +143,8 @@ class Grafo:
 
         return self.grafo[v][w]
 
- 
+g = Grafo(True)
+g.agregar_vertice('a')
+g.agregar_vertice('b')
+g.agregar_arista('a', 'b')
+print(g.estan_unidos('a','b'))

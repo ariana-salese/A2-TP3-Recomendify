@@ -3,6 +3,7 @@ from cola import Cola
 from pila import Pila
 from csv import DictReader
 
+
 def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
     '''
     Recibe un archivo tsv y cuatro parametros del header. Crea y devuelve un grafo
@@ -145,102 +146,41 @@ def reconstruir_camino(grafo, padre, destino):
 
     return recorrido[::-1]
 
-# def _rango(grafo, n, origen, v, visitados, n_actual, en_rango):
-#     '''
 
-#     '''
-#     print("________________________")
-#     print(f"EL ORIGEN ES {v}")
-#     print(f"n actual es: {n_actual}")
-#     visitados.add(v)
-
-#     if n == len(en_rango): 
-#         print(f"visitados: {visitados}")
-#         if v in en_rango: 
-#             print("Ya lo visite, devuelvo 0")
-#             return cantidad
-#         print("NO lo visite, devuelvo 1")
-#         return cantidad + 1 
-
-#     n_actual += 1
-
-#     for w in grafo.obtener_adyacentes(v):
-#         if w in visitados: continue
-#         print(f"Previo a sumar cantidad = {cantidad}")
-#         cantidad = _rango(grafo, n, origen, w, n_actual, cantidad)
-    
-#     print(f"El origen es: {v}")
-#     print("Devuelvo cantidad")
-#     return cantidad
-
-# def _rango(grafo, n, origen):
-#     '''
-
-#     '''
-#     en_rango = []
-#     visitados = set()
-#     padres = {}
-#     orden = {}
-#     q = Cola()
-#     visitados.add(origen)
-#     padres[origen] = None 
-#     orden[origen] = 0 
-#     q.encolar(origen)
-
-#     while not q.esta_vacia():
-#         v = q.desencolar()
-#         for w in grafo.obtener_adyacentes(v): 
-#             if w in visitados: continue
-#             visitados.add(w)
-#             padres[w] = v 
-#             orden[w] = orden[v] + 1
-#             q.encolar(w)
-
-#             if orden[w] == n and w not in en_rango: en_rango.append(w)
-	
-
-#     return en_rango
-
-def _rango(grafo, n, n_actual, v, padre, en_rango):
-
-    print("-------------")
-    print(f"origen: {v}")
-    print(f"n_actual: {n_actual}")
-    print(padre)
-    print('')
-
-    if n_actual > n:
-        print("Me pase, goodbye")
-        return en_rango
-
-    if n == n_actual:
-        if v not in en_rango: en_rango.append(v)
-        print(f"Devuelvo: {en_rango}")
-        return en_rango
-
-    n_actual += 1
-
-    for w in grafo.obtener_adyacentes(v):
-        print(f"El adyacente es: {w}")
-        if w in padre: print(f"Su padre es: {padre[w]}")
-        else: print("No tiene padre")
-        if w in padre and (padre[v] == w or padre[w] == None): continue
-        print("pase")
-        padre[w] = v
-        _rango(grafo, n, n_actual, w, padre, en_rango)
-
-    print("fin")
-    return en_rango
-
-
-
-def rango(grafo, n, v):
+def vertices_en_rango(grafo, n, v):
+    '''
+    Devuelve una lista de los vertices que se encuentran como minimo a n aristas 
+    del vertice v. 
     '''
 
+    orden = {}
+    orden[v] = 0
+
+    cola = Cola()
+    cola.encolar(v)
+ 
+    vertices = []
+
+    while not cola.esta_vacia():
+        v = cola.desencolar()
+
+        for w in grafo.obtener_adyacentes(v):
+            if w in orden: continue
+
+            orden[w] = orden[v] + 1
+
+            if orden[w] > n: return vertices 
+            if orden[w] == n: vertices.append(w)
+
+            cola.encolar(w)
+
+    return vertices
+
+
+def cantidad_en_rango(grafo, n, v):
     '''
-    padre = {}
-    padre[v] = None
+    Devuelve la cantidad de vertices que se encuentran como minimo a n aristas 
+    del vertice v. 
+    '''
 
-    return _rango(grafo, n, 0, v, padre, [])
-
-
+    return len(vertices_en_rango(grafo, n, v))

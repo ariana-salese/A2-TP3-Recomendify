@@ -204,13 +204,13 @@ def prueba_rango():
 
     origen = 'a'
 
-    print(f">>> A rango 1 se encuentran: {biblioteca.rango(g, 1, origen)} vertices || RESP. CORRECTA = [b, c]")
+    print(f">>> A rango 1 se encuentran: {biblioteca.vertices_en_rango(g, 1, origen)} vertices || RESP. CORRECTA = [b, c]")
 
-    #print(f">>> A rango 2 se encuentran: {biblioteca.rango(g, 2, origen)} vertices || RESP. CORRECTA = [d, e]")
+    print(f">>> A rango 2 se encuentran: {biblioteca.vertices_en_rango(g, 2, origen)} vertices || RESP. CORRECTA = [d, e]")
 
-    #print(f">>> A rango 3 se encuentran: {biblioteca.rango(g, 3, origen)} vertices || RESP. CORRECTA = [e, d, f, g]")
+    print(f">>> A rango 3 se encuentran: {biblioteca.vertices_en_rango(g, 3, origen)} vertices || RESP. CORRECTA = [e, d, f, g]")
 
-    #print(f">>> A rango 4 se encuentran: {biblioteca.rango(g, 4, origen)} vertices || RESP. CORRECTA = [b, e, d, c, f, g]")
+    print(f">>> A rango 4 se encuentran: {biblioteca.vertices_en_rango(g, 4, origen)} vertices || RESP. CORRECTA = [b, e, d, c, f, g]")
 
 
 
