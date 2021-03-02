@@ -1,7 +1,8 @@
-import biblioteca
+import graphutil
 import sys
 import mensajes
 import strutil
+from datetime import datetime
 
 # HEADERS
 '''
@@ -52,7 +53,7 @@ def camino(grafo_usuarios, origen, destino):
     	print("Tanto el origen como el destino deben ser canciones")
     	return
 
-    recorrido = biblioteca.camino_minimo(grafo_usuarios, origen, destino)
+    recorrido = graphutil.camino_minimo(grafo_usuarios, origen, destino)
 
     if not recorrido: 
     	print("No se encontro recorrido")
@@ -82,11 +83,17 @@ def camino(grafo_usuarios, origen, destino):
 
     print("")
 
-def mas_importantes(n):
+def mas_importantes(grafo_canciones, n, pagerank):
     '''
-    documentacion
+    Imprime por pantalla las canciones más importantes según el algoritmo "Pagerank"
     '''
-    pass
+        
+    if not pagerank:
+        pagerank = graphutil.pagerank(grafo_canciones)
+
+    strutil.imprimir_lista(pagerank[:n], SEP_CANCION_ARTISTA, ";")
+
+    return pagerank
 
 def recomendacion(usuario_cancion, n):
     '''
@@ -103,20 +110,13 @@ def ciclo(grafo_canciones, n, cancion):
 
     Si el ciclo no existe imprime el mensaje: 'No se encontro recorrido'.
     '''
-    ciclo = biblioteca.ciclo_largo_n(grafo_canciones, n, cancion)
+    ciclo = graphutil.ciclo_largo_n(grafo_canciones, n, cancion)
 
     if ciclo is None: 
         print(mensajes.ENOENT_RECORRIDO)
         return 
     
-    strutil.imprimir_lista(ciclo, SEP_CANCION_ARTISTA)
-
-def clustering(cancion):
-    '''
-    documentacion
-    '''
-    pass
-
+    strutil.imprimir_lista(ciclo, SEP_CANCION_ARTISTA, " --> ", True)
 
 '''
 -----------------------------------------------------------------
@@ -124,28 +124,7 @@ def clustering(cancion):
 -----------------------------------------------------------------
 '''
 
-#EJEMPLOS DE ENTRADAS
-
-# -> CAMINO
-#  camino Don't Go Away - Oasis >>>> Quitter - Eminem
-# camino CANCION_1 - ARTISTA_1 >>>> CANCION_2 - ARTISTA_2
-
-# -> MAS_IMPORTANTES
-# mas_importantes 20
-
-# -> RECOMENDACION
-# recomendacion canciones 10 Love Story - Taylor Swift >>>> Toxic - Britney Spears >>>> I Wanna Be Yours - Arctic Monkeys >>>> Hips Don't Lie (feat. Wyclef Jean) - Shakira >>>> Death Of A Martian - Red Hot Chili Peppers
-
-# -> CICLO DE N CANCIONES
-# ciclo 7 By The Way - Red Hot Chili Peppers
-
-# -> RANGO
-#  rango 8 Shots - Imagine Dragons
-
-# -> CLUSTERING
-# clustering Teenage Dream - Katy Perry
-
-def procesar_entrada(grafo_usuarios, grafo_canciones):
+def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
 
     for linea in sys.stdin:
         linea = linea.rstrip("\n")
@@ -163,13 +142,13 @@ def procesar_entrada(grafo_usuarios, grafo_canciones):
             artista_destino = None
 
             if len(origen_splitted) == 2 and len(destino_splitted) == 2:
-	            nombre_cancion_origen, artista_origen = origen.split(SEP_CANCION_ARTISTA)
-	            nombre_cancion_destino, artista_destino = destino.split(SEP_CANCION_ARTISTA)
+	            nombre_cancion_origen, artista_origen = origen_splitted
+	            nombre_cancion_destino, artista_destino = destino_splitted
 
             camino(grafo_usuarios, (nombre_cancion_origen, artista_origen), (nombre_cancion_destino, artista_destino))
         
         elif comando == MAS_IMPORTANTES:
-            mas_importantes(cadenas[INDICE_N])
+            pagerank = mas_importantes(grafo_canciones, int(cadenas[INDICE_N]), pagerank)
         
         elif comando == RECOMENDACION:
             pass
@@ -188,13 +167,17 @@ def procesar_entrada(grafo_usuarios, grafo_canciones):
             print(biblioteca.cantidad_en_rango(grafo_canciones, int(cadenas[INDICE_N]), (nombre_cancion, artista)))
         
         elif comando == CLUSTERING:
-            cancion, _= strutil.concatenar_cadenas(cadenas, 1)
-            nombre_cancion, artista = cancion.split(SEP_CANCION_ARTISTA)
-
-            clustering((nombre_cancion, artista))
+            if (len(cadenas)) == 1: 
+                coeficiente = graphutil.clustering_grafo(grafo_canciones)
+            else:
+                cancion, _= strutil.concatenar_cadenas(cadenas, 1)
+                nombre_cancion, artista = cancion.split(SEP_CANCION_ARTISTA)
+                
+                coeficiente = graphutil.clustering_vertice(grafo_canciones, (nombre_cancion, artista))
         
-        else: print(mensajes.ENOENT_COMANDO)
+            print(strutil.redondear(coeficiente, 3))
 
+        else: print(mensajes.ENOENT_COMANDO)
 
 '''
 -----------------------------------------------------------------
@@ -204,12 +187,19 @@ def procesar_entrada(grafo_usuarios, grafo_canciones):
 
 def main(ruta_archivo):
 
-    grafo_canciones = biblioteca.crear_grafo_canciones_provisorio(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
+    start_time = datetime.now()
+    grafo_canciones = graphutil.crear_grafo_canciones_provisorio(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
+    end_time = datetime.now()
+    #print(f"CREAR GRAFO CANCIONES: {end_time - start_time}")
 
-    grafo_usuarios = biblioteca.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
-    print("SE CREO!")
+    start_time = datetime.now()
+    grafo_usuarios = graphutil.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
+    end_time = datetime.now()
+    #print(f"CREAR GRAFO USUARIOS: {end_time - start_time}")
 
-    procesar_entrada(grafo_usuarios, grafo_canciones)
+    pagerank = []
+
+    procesar_entrada(grafo_usuarios, grafo_canciones, pagerank)
 
 
 main(sys.argv[1])

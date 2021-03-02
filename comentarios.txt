@@ -10,4 +10,6 @@ nuestras_pruebas.py
 mini_prueba.tsv
 
 recomendify.py:
-elemplos de entradas
+-ejemplos de entradas
+-import datetime
+-start_time....
