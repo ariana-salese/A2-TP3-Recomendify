@@ -83,11 +83,17 @@ def camino(grafo_usuarios, origen, destino):
 
     print("")
 
-def mas_importantes(n):
+def mas_importantes(grafo_canciones, n, pagerank):
     '''
-    documentacion
+    Imprime por pantalla las canciones más importantes según el algoritmo "Pagerank"
     '''
-    pass
+        
+    if not pagerank:
+        pagerank = graphutil.pagerank(grafo_canciones)
+
+    strutil.imprimir_lista(pagerank[:n], SEP_CANCION_ARTISTA, ";")
+
+    return pagerank
 
 def recomendacion(usuario_cancion, n):
     '''
@@ -110,7 +116,7 @@ def ciclo(grafo_canciones, n, cancion):
         print(mensajes.ENOENT_RECORRIDO)
         return 
     
-    strutil.imprimir_lista(ciclo, SEP_CANCION_ARTISTA)
+    strutil.imprimir_lista(ciclo, SEP_CANCION_ARTISTA, " --> ", True)
 
 def rango(n, cancion):
     '''
@@ -124,7 +130,7 @@ def rango(n, cancion):
 -----------------------------------------------------------------
 '''
 
-def procesar_entrada(grafo_usuarios, grafo_canciones):
+def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
 
     for linea in sys.stdin:
         linea = linea.rstrip("\n")
@@ -148,7 +154,7 @@ def procesar_entrada(grafo_usuarios, grafo_canciones):
             camino(grafo_usuarios, (nombre_cancion_origen, artista_origen), (nombre_cancion_destino, artista_destino))
         
         elif comando == MAS_IMPORTANTES:
-            mas_importantes(cadenas[INDICE_N])
+            pagerank = mas_importantes(grafo_canciones, int(cadenas[INDICE_N]), pagerank)
         
         elif comando == RECOMENDACION:
             pass
@@ -189,14 +195,16 @@ def main(ruta_archivo):
     start_time = datetime.now()
     grafo_canciones = graphutil.crear_grafo_canciones_provisorio(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
     end_time = datetime.now()
-    print(f"CREAR GRAFO CANCIONES: {end_time - start_time}")
+    #print(f"CREAR GRAFO CANCIONES: {end_time - start_time}")
 
     start_time = datetime.now()
     grafo_usuarios = graphutil.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
     end_time = datetime.now()
-    print(f"CREAR GRAFO USUARIOS: {end_time - start_time}")
+    #print(f"CREAR GRAFO USUARIOS: {end_time - start_time}")
 
-    procesar_entrada(grafo_usuarios, grafo_canciones)
+    pagerank = []
+
+    procesar_entrada(grafo_usuarios, grafo_canciones, pagerank)
 
 
 main(sys.argv[1])
