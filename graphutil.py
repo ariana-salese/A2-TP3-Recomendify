@@ -1,6 +1,5 @@
 from grafo import Grafo
 from cola import Cola
-from pila import Pila
 from csv import DictReader
 import sys
 import csv
@@ -201,7 +200,7 @@ def pagerank(grafo):
 		for hijo in grafo.obtener_adyacentes(nodo):
 			padres[hijo].append(nodo)
 
-	result = _pagerank(grafo, dict_pgrnk, padres, 10)
+	result = _pagerank(grafo, dict_pgrnk, padres, 5)
 
 	return [dato[0] for dato in sorted(result.items(), key=lambda x: x[1], reverse=True)]
 

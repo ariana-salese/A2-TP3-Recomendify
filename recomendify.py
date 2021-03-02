@@ -195,12 +195,12 @@ def main(ruta_archivo):
     start_time = datetime.now()
     grafo_canciones = graphutil.crear_grafo_canciones_provisorio(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
     end_time = datetime.now()
-    print(f"CREAR GRAFO CANCIONES: {end_time - start_time}")
+    #print(f"CREAR GRAFO CANCIONES: {end_time - start_time}")
 
     start_time = datetime.now()
     grafo_usuarios = graphutil.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
     end_time = datetime.now()
-    print(f"CREAR GRAFO USUARIOS: {end_time - start_time}")
+    #print(f"CREAR GRAFO USUARIOS: {end_time - start_time}")
 
     pagerank = []
 
