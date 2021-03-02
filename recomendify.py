@@ -4,7 +4,6 @@ import graphutil
 import sys
 import mensajes
 import strutil
-from datetime import datetime
 
 # HEADERS
 USER_ID = 'USER_ID'
