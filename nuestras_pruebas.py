@@ -2,6 +2,7 @@ import csv
 import biblioteca
 import sys
 import mensajes
+from grafo import Grafo
 
 ID = 'ID'
 USER_ID = 'USER_ID'
@@ -179,6 +180,40 @@ def prueba_ciclo_n():
     print(ciclo_4)
     print(f"El origen (('Dive', 'Ed Sheeran')) es adyacente al ultimo vertice (('Shape Of You', 'Ed Sheeran')): {('Dive', 'Ed Sheeran') in grafo.obtener_adyacentes((('Shape Of You', 'Ed Sheeran')))}")
 
+def prueba_rango():
+    #creo grafo
+    g = Grafo()
+
+    #agrego vertices
+    g.agregar_vertices(['a', 'b', 'c', 'd', 'e','f','g'])
+
+    #agrego aristas
+    g.agregar_arista('a','b')
+    g.agregar_arista('a','c')
+    g.agregar_arista('e','b')
+    g.agregar_arista('d','c')
+    g.agregar_arista('d','e')
+    g.agregar_arista('d','g')
+    g.agregar_arista('d','f')
+    g.agregar_arista('f','e')
+
+    print(f"GRAFO: {g}")
+    print('')
+
+    #defino origen
+
+    origen = 'a'
+
+    print(f">>> A rango 1 se encuentran: {biblioteca.vertices_en_rango(g, 1, origen)} vertices || RESP. CORRECTA = [b, c]")
+
+    print(f">>> A rango 2 se encuentran: {biblioteca.vertices_en_rango(g, 2, origen)} vertices || RESP. CORRECTA = [d, e]")
+
+    print(f">>> A rango 3 se encuentran: {biblioteca.vertices_en_rango(g, 3, origen)} vertices || RESP. CORRECTA = [e, d, f, g]")
+
+    print(f">>> A rango 4 se encuentran: {biblioteca.vertices_en_rango(g, 4, origen)} vertices || RESP. CORRECTA = [b, e, d, c, f, g]")
+
+
+
 def main():
     #leer_archivo_tsv()
     #crear_grafo_usuarios()
@@ -186,6 +221,7 @@ def main():
     #procesar_entrada_2() #clearly nicer 
     #prueba_concatenar_cadenas()
     #prueba_crear_grafo_canciones()
-    prueba_ciclo_n()
+    #prueba_ciclo_n()
+    prueba_rango()
 
 main()

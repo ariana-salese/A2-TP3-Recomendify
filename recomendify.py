@@ -118,12 +118,6 @@ def ciclo(grafo_canciones, n, cancion):
     
     strutil.imprimir_lista(ciclo, SEP_CANCION_ARTISTA, " --> ", True)
 
-def rango(n, cancion):
-    '''
-    documentacion
-    '''
-    pass
-
 '''
 -----------------------------------------------------------------
                   PROCESAMIENTO DE ENTRADA
@@ -167,10 +161,11 @@ def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
     
         elif comando == RANGO:
             cancion, _ = strutil.concatenar_cadenas(cadenas, 2)
+            print(cancion)
             nombre_cancion, artista = cancion.split(SEP_CANCION_ARTISTA)
 
-            rango(cadenas[INDICE_N], (nombre_cancion, artista))
-
+            print(biblioteca.cantidad_en_rango(grafo_canciones, int(cadenas[INDICE_N]), (nombre_cancion, artista)))
+        
         elif comando == CLUSTERING:
             if (len(cadenas)) == 1: 
                 coeficiente = graphutil.clustering_grafo(grafo_canciones)

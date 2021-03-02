@@ -149,8 +149,47 @@ def reconstruir_camino(grafo, padre, destino):
         
         destino_actual = padre[destino_actual]
 
-    return recorrido[::-1]
-    
+	return recorrido[::-1]
+	
+
+def vertices_en_rango(grafo, n, v):
+    '''
+    Devuelve una lista de los vertices que se encuentran como minimo a n aristas 
+    del vertice v. 
+    '''
+
+    orden = {}
+    orden[v] = 0
+
+    cola = Cola()
+    cola.encolar(v)
+ 
+    vertices = []
+
+    while not cola.esta_vacia():
+        v = cola.desencolar()
+
+        for w in grafo.obtener_adyacentes(v):
+            if w in orden: continue
+
+            orden[w] = orden[v] + 1
+
+            if orden[w] > n: return vertices 
+            if orden[w] == n: vertices.append(w)
+
+            cola.encolar(w)
+
+    return vertices
+
+
+def cantidad_en_rango(grafo, n, v):
+    '''
+    Devuelve la cantidad de vertices que se encuentran como minimo a n aristas 
+    del vertice v. 
+    '''
+
+    return len(vertices_en_rango(grafo, n, v))	
+
 
 def clustering_vertice(grafo, vertice):
     '''

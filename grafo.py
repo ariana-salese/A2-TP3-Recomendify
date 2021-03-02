@@ -10,8 +10,7 @@ class Grafo:
     '''
     def __init__(self, es_dirigido = False):
         '''
-        Crea el grafo vacio y no dirigido si se recibe False o nada por 
-        parametro, o dirigido si se recibe True.
+        Crea el grafo vacio, dirigido si se recibe True.
         '''
         self.grafo = {}
         self.es_dirigido = es_dirigido
@@ -44,7 +43,13 @@ class Grafo:
         '''
         Agrega el vertice v al grafo.
         '''
-        self.grafo[v] = {} 
+        self.grafo[v] = {}
+    
+    def agregar_vertices(self, vv):
+        '''
+        Recibe una lista de vertices y los agrega al grafo
+        '''
+        for v in vv: self.agregar_vertice(v)
 
     def agregar_arista(self, v, w, peso = 0):
         '''
@@ -81,7 +86,7 @@ class Grafo:
         '''
         if v not in self.grafo or w not in self.grafo: raise ERROR_VERTICES
 
-        return v in self.grafo[w] 
+        return w in self.grafo[v] 
     
     def obtener_vertice_random(self):
         '''
@@ -138,34 +143,8 @@ class Grafo:
 
         return self.grafo[v][w]
 
-
-#PRUEBAS (ELIMINAR)
-
-'''
-g = Grafo()
-
-print(g)
-
-#agrega vertices
-
+g = Grafo(True)
 g.agregar_vertice('a')
 g.agregar_vertice('b')
-g.agregar_vertice('c')
-g.agregar_vertice('d')
-g.agregar_vertice('e')
-g.agregar_vertice('f')
-g.agregar_vertice('g')
-g.agregar_vertice('h')
-
-print(g)
-
-#agrega aristas
-
-g.agregar_arista('a','b')
-
-#obtener vertice random
-
-print(g.obtener_vertice_random())
-
-'''
- 
+g.agregar_arista('a', 'b')
+print(g.estan_unidos('a','b'))
