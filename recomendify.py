@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import graphutil
 import sys
 import mensajes
@@ -5,12 +7,6 @@ import strutil
 from datetime import datetime
 
 # HEADERS
-'''
-Comento los que no se si vamos a usar, cuando nos organizamos borramos lo que 
-sobra
-ID = 'ID'
-GENRES = 'GENRES'
-'''
 USER_ID = 'USER_ID'
 TRACK_NAME = 'TRACK_NAME'	
 ARTIST = 'ARTIST' 
@@ -151,7 +147,7 @@ def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
             pagerank = mas_importantes(grafo_canciones, int(cadenas[INDICE_N]), pagerank)
         
         elif comando == RECOMENDACION:
-            pass
+            print("INCOMPLETO")
 
         elif comando == CICLO:
             cancion, _ = strutil.concatenar_cadenas(cadenas, 2)
@@ -187,15 +183,8 @@ def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
 
 def main(ruta_archivo):
 
-    start_time = datetime.now()
     grafo_canciones = graphutil.crear_grafo_canciones_provisorio(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
-    end_time = datetime.now()
-    #print(f"CREAR GRAFO CANCIONES: {end_time - start_time}")
-
-    start_time = datetime.now()
     grafo_usuarios = graphutil.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
-    end_time = datetime.now()
-    #print(f"CREAR GRAFO USUARIOS: {end_time - start_time}")
 
     pagerank = []
 

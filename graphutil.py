@@ -149,8 +149,8 @@ def reconstruir_camino(grafo, padre, destino):
         
         destino_actual = padre[destino_actual]
 
-	return recorrido[::-1]
-	
+    return recorrido[::-1]
+
 
 def vertices_en_rango(grafo, n, v):
     '''

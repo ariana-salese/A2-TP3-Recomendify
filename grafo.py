@@ -142,9 +142,3 @@ class Grafo:
         if not self.estan_unidos(v, w): raise ERROR_UNION
 
         return self.grafo[v][w]
-
-g = Grafo(True)
-g.agregar_vertice('a')
-g.agregar_vertice('b')
-g.agregar_arista('a', 'b')
-print(g.estan_unidos('a','b'))
