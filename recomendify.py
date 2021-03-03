@@ -120,12 +120,21 @@ def ciclo(grafo_canciones, n, cancion):
 -----------------------------------------------------------------
 '''
 
-def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
+def procesar_entrada(ruta_archivo, pagerank):
+
+    grafo_usuarios = None 
+    grafo_canciones = None
 
     for linea in sys.stdin:
         linea = linea.rstrip("\n")
         cadenas = linea.split()
         comando = cadenas[0]
+    
+        if comando == CAMINO and grafo_usuarios is None: 
+            grafo_usuarios = graphutil.crear_grafo_bipartito_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
+
+        if comando in (MAS_IMPORTANTES, CICLO, CLUSTERING, RANGO) and grafo_canciones is None:
+            grafo_canciones = graphutil.crear_grafo_con_archivo(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
 
         if comando == CAMINO:
             origen, ultimo_indice = strutil.concatenar_cadenas(cadenas, 1, SEP_CANCIONES)
@@ -141,10 +150,7 @@ def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
 	            nombre_cancion_origen, artista_origen = origen_splitted
 	            nombre_cancion_destino, artista_destino = destino_splitted
 
-            start_time = datetime.now()
             camino(grafo_usuarios, (nombre_cancion_origen, artista_origen), (nombre_cancion_destino, artista_destino))
-            end_time = datetime.now()
-            print(f"=> Se obtubo el camino minimo en {end_time - start_time}")
         
         elif comando == MAS_IMPORTANTES:
             pagerank = mas_importantes(grafo_canciones, int(cadenas[INDICE_N]), pagerank)
@@ -186,22 +192,9 @@ def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
 
 def main(ruta_archivo):
 
-    start_time = datetime.now()
-    grafo_canciones = graphutil.crear_grafo_con_archivo(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
-    end_time = datetime.now()
-    print(f"Se creo el grafo de canciones en {end_time - start_time}")
-
-    start_time = datetime.now()
-    grafo_usuarios = graphutil.crear_grafo_bipartito_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
-    end_time = datetime.now()
-    print(f"Se creo el grafo de usuarios (bipartito) en {end_time - start_time}")
-    print('')
-    print("-----COMIENZA EL PROGRAMA-----")
-    print('')
-
     pagerank = []
 
-    procesar_entrada(grafo_usuarios, grafo_canciones, pagerank)
+    procesar_entrada(ruta_archivo, pagerank)
 
 
 main(sys.argv[1])

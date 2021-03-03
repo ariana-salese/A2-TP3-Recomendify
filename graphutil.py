@@ -113,7 +113,6 @@ def camino_minimo(grafo, origen, destino):
     Si no se encuentra camino devuelve None.
     '''
 
-    start_time = datetime.now()
     visitados = set()
     padre = {}
     q = Cola() 
@@ -133,16 +132,9 @@ def camino_minimo(grafo, origen, destino):
                     encontre_destino = True
                     break
 
-    end_time = datetime.now()
-    print(f"> Completar el diccionario de padres: {end_time - start_time}")
-    
     if not encontre_destino: return None
-    
-    start_time = datetime.now()
-    camino = reconstruir_camino(grafo, padre, destino)
-    end_time = datetime.now()
-    print(f"> Reconstruir el camino tarda: {end_time - start_time}")
-    return camino
+
+    return reconstruir_camino(grafo, padre, destino)
 
 
 def reconstruir_camino(grafo, padre, destino):
