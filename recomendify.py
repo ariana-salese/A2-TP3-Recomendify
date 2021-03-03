@@ -4,6 +4,7 @@ import graphutil
 import sys
 import mensajes
 import strutil
+from datetime import datetime
 
 # HEADERS
 USER_ID = 'USER_ID'
@@ -43,7 +44,7 @@ def camino(grafo_usuarios, origen, destino):
     Tanto si el origen o destino no son canciones válidas como si no existe camino entre las 
     canciones, se imprimirá el error correspondiente.
     '''
-
+    
     if not (grafo_usuarios.existe_vertice(origen) and grafo_usuarios.existe_vertice(destino)):
     	print("Tanto el origen como el destino deben ser canciones")
     	return
@@ -140,7 +141,10 @@ def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
 	            nombre_cancion_origen, artista_origen = origen_splitted
 	            nombre_cancion_destino, artista_destino = destino_splitted
 
+            start_time = datetime.now()
             camino(grafo_usuarios, (nombre_cancion_origen, artista_origen), (nombre_cancion_destino, artista_destino))
+            end_time = datetime.now()
+            print(f"=> Se obtubo el camino minimo en {end_time - start_time}")
         
         elif comando == MAS_IMPORTANTES:
             pagerank = mas_importantes(grafo_canciones, int(cadenas[INDICE_N]), pagerank)
@@ -182,8 +186,18 @@ def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
 
 def main(ruta_archivo):
 
-    grafo_canciones = graphutil.crear_grafo_canciones_provisorio(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
-    grafo_usuarios = graphutil.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
+    start_time = datetime.now()
+    grafo_canciones = graphutil.crear_grafo_con_archivo(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
+    end_time = datetime.now()
+    print(f"Se creo el grafo de canciones en {end_time - start_time}")
+
+    start_time = datetime.now()
+    grafo_usuarios = graphutil.crear_grafo_bipartito_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
+    end_time = datetime.now()
+    print(f"Se creo el grafo de usuarios (bipartito) en {end_time - start_time}")
+    print('')
+    print("-----COMIENZA EL PROGRAMA-----")
+    print('')
 
     pagerank = []
 

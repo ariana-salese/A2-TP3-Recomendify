@@ -4,12 +4,13 @@ from csv import DictReader
 import sys
 import csv
 from strutil import redondear
+from datetime import datetime
 
 csv.field_size_limit(sys.maxsize)
 
 D = 0.85
 
-def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
+def crear_grafo_bipartito_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
     '''
     Recibe un archivo tsv y cuatro parametros del header. Crea y devuelve un grafo
     bipartito que relaciona el param_1 con la aristas cuyo peso es param_2
@@ -18,8 +19,11 @@ def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
 
     grafo = Grafo(False)
 
+    #start_time = datetime.now()
     with open(ruta_archivo) as archivo:
+        #end_time = datetime.now()
         lector = DictReader(archivo, delimiter = '\t')
+        #print(f"DictReader tardo: {end_time - start_time}")
 
         for linea in lector:
             vertice_1, peso, vertice_2,  = linea[param_1], linea[param_2], (linea[param_3], linea[param_4])
@@ -27,12 +31,13 @@ def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
             if vertice_1 not in grafo: grafo.agregar_vertice(vertice_1)
             if vertice_2 not in grafo: grafo.agregar_vertice(vertice_2)
 
-            if not grafo.estan_unidos(vertice_1, vertice_2): grafo.agregar_arista(vertice_1, vertice_2, peso)
+            #if not grafo.estan_unidos(vertice_1, vertice_2): 
+            grafo.agregar_arista(vertice_1, vertice_2, peso)
     
     return grafo
 
 
-def crear_grafo_canciones_provisorio(ruta_archivo, param_1, param_2, param_3):
+def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3):
     '''
     Recibe un archivo tsv y tres parametros de su header. Devuelve un grafo que relaciona
     la tupla (param_2, param_3) de cada linea si param_1 es igual en estas. 
@@ -108,6 +113,7 @@ def camino_minimo(grafo, origen, destino):
     Si no se encuentra camino devuelve None.
     '''
 
+    start_time = datetime.now()
     visitados = set()
     padre = {}
     q = Cola() 
@@ -126,10 +132,17 @@ def camino_minimo(grafo, origen, destino):
                 if w == destino: 
                     encontre_destino = True
                     break
+
+    end_time = datetime.now()
+    print(f"> Completar el diccionario de padres: {end_time - start_time}")
     
     if not encontre_destino: return None
-
-    return reconstruir_camino(grafo, padre, destino)
+    
+    start_time = datetime.now()
+    camino = reconstruir_camino(grafo, padre, destino)
+    end_time = datetime.now()
+    print(f"> Reconstruir el camino tarda: {end_time - start_time}")
+    return camino
 
 
 def reconstruir_camino(grafo, padre, destino):
@@ -138,6 +151,7 @@ def reconstruir_camino(grafo, padre, destino):
     Devuelve una lista con los vertices recorridos incuyendo los pesos que los 
     une.
     '''
+    
     destino_actual = destino
     recorrido = []
 
@@ -219,6 +233,7 @@ def clustering_grafo(grafo):
     
     return coeficientes / len(grafo)
 
+
 def pagerank(grafo):
     '''
     Devuelve una lista con el pagerank de cada nodo
@@ -242,6 +257,7 @@ def pagerank(grafo):
     result = _pagerank(grafo, dict_pgrnk, padres, 5)
 
     return [dato[0] for dato in sorted(result.items(), key=lambda x: x[1], reverse=True)]
+
 
 def _pagerank(grafo, dict_pgrnk, padres, n, cont = 0):
     #print("iter")
