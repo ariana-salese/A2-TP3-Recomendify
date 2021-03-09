@@ -149,8 +149,8 @@ def reconstruir_camino(grafo, padre, destino):
         
         destino_actual = padre[destino_actual]
 
-	return recorrido[::-1]
-	
+    return recorrido[::-1]
+    
 
 def vertices_en_rango(grafo, n, v):
     '''
@@ -188,7 +188,7 @@ def cantidad_en_rango(grafo, n, v):
     del vertice v. 
     '''
 
-    return len(vertices_en_rango(grafo, n, v))	
+    return len(vertices_en_rango(grafo, n, v))  
 
 
 def clustering_vertice(grafo, vertice):
