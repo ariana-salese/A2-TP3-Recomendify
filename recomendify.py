@@ -91,11 +91,13 @@ def mas_importantes(grafo_canciones, n, pagerank):
 
     return pagerank
 
+
 def recomendacion(usuario_cancion, n):
     '''
     documentacion
     '''
     pass
+
 
 def ciclo(grafo_canciones, n, cancion):
     '''
@@ -143,8 +145,8 @@ def procesar_entrada(ruta_archivo, pagerank):
             origen_splitted = origen.split(SEP_CANCION_ARTISTA)
             destino_splitted = destino.split(SEP_CANCION_ARTISTA)
 
-            artista_origen = None
-            artista_destino = None
+            artista_origen = artista_destino = None
+            nombre_cancion_destino = nombre_cancion_origen = None
 
             if len(origen_splitted) == 2 and len(destino_splitted) == 2:
 	            nombre_cancion_origen, artista_origen = origen_splitted

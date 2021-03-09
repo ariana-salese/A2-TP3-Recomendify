@@ -19,21 +19,19 @@ def crear_grafo_bipartito_con_archivo(ruta_archivo, param_1, param_2, param_3, p
 
     grafo = Grafo(False)
 
-    #start_time = datetime.now()
-    with open(ruta_archivo) as archivo:
-        #end_time = datetime.now()
-        lector = DictReader(archivo, delimiter = '\t')
-        #print(f"DictReader tardo: {end_time - start_time}")
 
+    with open(ruta_archivo) as archivo:
+
+        lector = DictReader(archivo, delimiter = '\t')
+    
         for linea in lector:
             vertice_1, peso, vertice_2,  = linea[param_1], linea[param_2], (linea[param_3], linea[param_4])
+            
+            if not grafo.existe_vertice(vertice_1): grafo.agregar_vertice(vertice_1)
+            if not grafo.existe_vertice(vertice_2): grafo.agregar_vertice(vertice_2)
 
-            if vertice_1 not in grafo: grafo.agregar_vertice(vertice_1)
-            if vertice_2 not in grafo: grafo.agregar_vertice(vertice_2)
-
-            #if not grafo.estan_unidos(vertice_1, vertice_2): 
-            grafo.agregar_arista(vertice_1, vertice_2, peso)
-    
+            if not grafo.estan_unidos(vertice_1, vertice_2): grafo.agregar_arista(vertice_1, vertice_2, peso)
+   
     return grafo
 
 
@@ -135,7 +133,7 @@ def camino_minimo(grafo, origen, destino):
     if not encontre_destino: return None
 
     return reconstruir_camino(grafo, padre, destino)
-
+    
 
 def reconstruir_camino(grafo, padre, destino):
     '''
