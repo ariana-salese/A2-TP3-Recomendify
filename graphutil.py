@@ -19,9 +19,8 @@ def crear_grafo_bipartito_con_archivo(ruta_archivo, param_1, param_2, param_3, p
 
     grafo = Grafo(False)
 
-
     with open(ruta_archivo) as archivo:
-
+     
         lector = DictReader(archivo, delimiter = '\t')
     
         for linea in lector:
@@ -50,7 +49,7 @@ def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3):
             grupo = linea[param_1]
             vertice = (linea[param_2], linea[param_3])
 
-            if vertice not in grafo: grafo.agregar_vertice(vertice)
+            if not grafo.existe_vertice(vertice): grafo.agregar_vertice(vertice)
 
             grupo_actual = datos.get(grupo, [])
 
@@ -60,7 +59,7 @@ def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3):
             
             grupo_actual.append(vertice)
             datos[grupo] = grupo_actual
-    
+
     return grafo
 
 

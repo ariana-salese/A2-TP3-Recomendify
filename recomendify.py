@@ -108,6 +108,11 @@ def ciclo(grafo_canciones, n, cancion):
 
     Si el ciclo no existe imprime el mensaje: 'No se encontro recorrido'.
     '''
+    
+    if not grafo_canciones.existe_vertice(cancion):
+        print(mensajes.ENOENT_RECORRIDO)
+        return 
+
     ciclo = graphutil.ciclo_largo_n(grafo_canciones, n, cancion)
 
     if ciclo is None: 
