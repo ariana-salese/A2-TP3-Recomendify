@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import graphutil
 import sys
 import mensajes
@@ -5,12 +7,6 @@ import strutil
 from datetime import datetime
 
 # HEADERS
-'''
-Comento los que no se si vamos a usar, cuando nos organizamos borramos lo que 
-sobra
-ID = 'ID'
-GENRES = 'GENRES'
-'''
 USER_ID = 'USER_ID'
 TRACK_NAME = 'TRACK_NAME'	
 ARTIST = 'ARTIST' 
@@ -48,7 +44,7 @@ def camino(grafo_usuarios, origen, destino):
     Tanto si el origen o destino no son canciones válidas como si no existe camino entre las 
     canciones, se imprimirá el error correspondiente.
     '''
-
+    
     if not (grafo_usuarios.existe_vertice(origen) and grafo_usuarios.existe_vertice(destino)):
     	print("Tanto el origen como el destino deben ser canciones")
     	return
@@ -95,11 +91,13 @@ def mas_importantes(grafo_canciones, n, pagerank):
 
     return pagerank
 
+
 def recomendacion(usuario_cancion, n):
     '''
     documentacion
     '''
     pass
+
 
 def ciclo(grafo_canciones, n, cancion):
     '''
@@ -110,6 +108,11 @@ def ciclo(grafo_canciones, n, cancion):
 
     Si el ciclo no existe imprime el mensaje: 'No se encontro recorrido'.
     '''
+    
+    if not grafo_canciones.existe_vertice(cancion):
+        print(mensajes.ENOENT_RECORRIDO)
+        return 
+
     ciclo = graphutil.ciclo_largo_n(grafo_canciones, n, cancion)
 
     if ciclo is None: 
@@ -124,12 +127,21 @@ def ciclo(grafo_canciones, n, cancion):
 -----------------------------------------------------------------
 '''
 
-def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
+def procesar_entrada(ruta_archivo, pagerank):
+
+    grafo_usuarios = None 
+    grafo_canciones = None
 
     for linea in sys.stdin:
         linea = linea.rstrip("\n")
         cadenas = linea.split()
         comando = cadenas[0]
+    
+        if comando == CAMINO and grafo_usuarios is None: 
+            grafo_usuarios = graphutil.crear_grafo_bipartito_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
+
+        if comando in (MAS_IMPORTANTES, CICLO, CLUSTERING, RANGO) and grafo_canciones is None:
+            grafo_canciones = graphutil.crear_grafo_con_archivo(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
 
         if comando == CAMINO:
             origen, ultimo_indice = strutil.concatenar_cadenas(cadenas, 1, SEP_CANCIONES)
@@ -138,8 +150,8 @@ def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
             origen_splitted = origen.split(SEP_CANCION_ARTISTA)
             destino_splitted = destino.split(SEP_CANCION_ARTISTA)
 
-            artista_origen = None
-            artista_destino = None
+            artista_origen = artista_destino = None
+            nombre_cancion_destino = nombre_cancion_origen = None
 
             if len(origen_splitted) == 2 and len(destino_splitted) == 2:
 	            nombre_cancion_origen, artista_origen = origen_splitted
@@ -151,7 +163,7 @@ def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
             pagerank = mas_importantes(grafo_canciones, int(cadenas[INDICE_N]), pagerank)
         
         elif comando == RECOMENDACION:
-            pass
+            print("INCOMPLETO")
 
         elif comando == CICLO:
             cancion, _ = strutil.concatenar_cadenas(cadenas, 2)
@@ -161,7 +173,7 @@ def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
     
         elif comando == RANGO:
             cancion, _ = strutil.concatenar_cadenas(cadenas, 2)
-            print(cancion)
+            
             nombre_cancion, artista = cancion.split(SEP_CANCION_ARTISTA)
 
             print(biblioteca.cantidad_en_rango(grafo_canciones, int(cadenas[INDICE_N]), (nombre_cancion, artista)))
@@ -187,19 +199,9 @@ def procesar_entrada(grafo_usuarios, grafo_canciones, pagerank):
 
 def main(ruta_archivo):
 
-    start_time = datetime.now()
-    grafo_canciones = graphutil.crear_grafo_canciones_provisorio(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
-    end_time = datetime.now()
-    #print(f"CREAR GRAFO CANCIONES: {end_time - start_time}")
-
-    start_time = datetime.now()
-    grafo_usuarios = graphutil.crear_grafo_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
-    end_time = datetime.now()
-    #print(f"CREAR GRAFO USUARIOS: {end_time - start_time}")
-
     pagerank = []
 
-    procesar_entrada(grafo_usuarios, grafo_canciones, pagerank)
+    procesar_entrada(ruta_archivo, pagerank)
 
 
 main(sys.argv[1])
