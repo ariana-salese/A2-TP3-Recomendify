@@ -191,7 +191,7 @@ def cantidad_en_rango(grafo, n, v):
     del vertice v. 
     '''
 
-    return len(vertices_en_rango(grafo, n, v))	
+    return len(vertices_en_rango(grafo, n, v))  
 
 
 def clustering_vertice(grafo, vertice):
