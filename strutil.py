@@ -19,7 +19,7 @@ def concatenar_cadenas(cadenas, indice_inicio, cadena_fin = None):
     return cadena_resultante[:-1], len(cadenas) - 1
 
 
-def imprimir_lista(lista, sep_int, sep_ext, repetir_primero = False):
+def imprimir_lista_de_tuplas(lista, sep_int, sep_ext, repetir_primero = False):
     '''
     Recibe una lista con el formato [(param_1a, param_2a), (param_1b, param_2b)] e imprime:
     param_1a(sep_int)param_2a sep_ext param_1b(sep_int)param_2b...
@@ -35,6 +35,20 @@ def imprimir_lista(lista, sep_int, sep_ext, repetir_primero = False):
         print(f"{sep_ext}{lista[0][0]}{sep_int}{lista[0][1]}")
     else:
         print("")
+
+def imprimir_lista(lista, separador):
+    '''
+    Recibe una lista e imprime en una sola linea toda la lista separando cada elemento
+    con el sepadador.
+    '''
+
+    for i, cadena in enumerate(lista):
+
+        print(cadena, end = '')
+        if i != len(lista) - 1: print(separador, end = '')
+    
+    print('')
+    
 
 def redondear(n, decimales):
     '''

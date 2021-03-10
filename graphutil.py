@@ -9,6 +9,8 @@ from datetime import datetime
 csv.field_size_limit(sys.maxsize)
 
 D = 0.85
+ITERACIONES_PRP = 350 #PRP = Page Rank Personalizado
+RANDOM_WALKS_PRP = 50 
 
 def crear_grafo_bipartito_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
     '''
@@ -54,11 +56,14 @@ def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3):
             grupo_actual = datos.get(grupo, [])
 
             for w in grupo_actual: 
+                if w == vertice: continue
+
                 if not grafo.estan_unidos(vertice, w):
                     grafo.agregar_arista(vertice, w)
             
-            grupo_actual.append(vertice)
-            datos[grupo] = grupo_actual
+            if vertice not in grupo_actual: 
+                grupo_actual.append(vertice)
+                datos[grupo] = grupo_actual
 
     return grafo
 
@@ -246,7 +251,7 @@ def pagerank(grafo):
 
 
 def _pagerank(grafo, dict_pgrnk, padres, n, cont = 0):
-   
+
     new_dict_pgrnk = {}
 
     for nodo in dict_pgrnk:
@@ -261,4 +266,61 @@ def _pagerank(grafo, dict_pgrnk, padres, n, cont = 0):
         return _pagerank(grafo, new_dict_pgrnk, padres, n, cont)
 
     return new_dict_pgrnk
+
+
+def random_walk(grafo, v, rango, rango_act, valores):
+    '''
+    Realiza un camino aleatorio y define valores del 0 a 1
+    segun cuan probable es llegar a estos vertices desde el vertice v.
+    '''
+
+    if rango_act == rango: return valores
+
+    adyacentes_v = grafo.obtener_adyacentes(v)
+
+    if rango_act == 0:
+        valor_a_sumar = 1 / len(adyacentes_v)
+    else:
+        valor_a_sumar = valores[v] / len(adyacentes_v)
+
+    w = grafo.obtener_adyacente_random(v)
+
+    valores[w] = valores.get(w, 0) + valor_a_sumar
+
+    return random_walk(grafo, w, rango, rango_act + 1, valores)
+
+
+def pagerank_personzalido(grafo, vertices, n, pertenece = None):
+    '''
+    Devuelve una lista de n vertices que mas se relacionan con los vertices pasados 
+    por paramtro
+    '''
+
+    valores_totales = {}
+
+    for v in vertices:
+        valores = {}
+
+        for i in range(RANDOM_WALKS_PRP): #Varios random walks por cada vértice
+
+            valores_actuales = random_walk(grafo, v, ITERACIONES_PRP, 0, valores)
+
+            for w, valor in valores_actuales.items():
+                valores_totales[w] = valores_totales.get(w, 0) + valor  
+
+    valores_finales = {} #Elimino los dados por parámetro
+
+    for v, valor in valores_totales.items():
+        if v not in vertices:
+            valores_finales[v] = valor
+
+    aux = list(valores_finales.items())
+    aux.sort(key = lambda x: x[1] , reverse = True) 
+
+    if pertenece is not None:
+        vertices = [v for v, _ in aux if pertenece(v)][:n]
+    else:
+        vertices = [v for v, _ in aux][:n]
+
+    return vertices
 

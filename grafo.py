@@ -92,7 +92,18 @@ class Grafo:
         '''
         Devuelve un vertice aleatorio.
         '''
-        return choice(list(self.grafo))  
+        return choice(list(self.grafo)) 
+    
+    def obtener_adyacente_random(self, v):
+        '''
+        Devuelve un adyacente aleatorio del vertice v, si no tiene adyacentes
+        devuelve None
+        '''
+        adyacentes = list(self.grafo[v])
+        
+        if len(adyacentes) == 0: return None
+
+        return choice(adyacentes)
 
     def obtener_vertices(self):
         '''
