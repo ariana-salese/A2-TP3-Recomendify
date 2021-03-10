@@ -274,13 +274,15 @@ def random_walk(grafo, v, rango, rango_act, valores):
     if rango_act == rango: return valores
 
     adyacentes_v = grafo.obtener_adyacentes(v)
-    valor_a_sumar = valores[v] // len(adyacentes_v)
+
+    if rango_act == 0:
+        valor_a_sumar = 1 / len(adyacentes_v)
+    else:
+        valor_a_sumar = valores[v] / len(adyacentes_v)
 
     w = grafo.obtener_adyacente_random(v)
-    
-    valor_w = valores.get(w, 0)
-    valor_w += valor_a_sumar
-    valores[w] = valor_w
+
+    valores[w] = valores.get(w, 0) + valor_a_sumar
 
     return random_walk(grafo, w, rango, rango_act + 1, valores)
 
@@ -289,23 +291,28 @@ def pagerank_personzalido(grafo, vertices, n, pertenece = None):
     '''
     documentacion
     '''
-    rango = len(vertices) * n #no tengo ni idea de porque puse esto asi
+    rango = 350 #no tengo ni idea de porque puse esto asi
     #print(f"el rango es {rango}")
     valores_totales = {}
 
     for v in vertices:
         valores = {}
-        valores[v] = 1
-        
-        valores_actuales = random_walk(grafo, v, rango, 0, valores)
 
-        for w, valor in valores_actuales.items():
-            valor_w = valores_totales.get(w, 0)
-            valor_w += valor
-            valores_totales[w] = valor_w
-    
-    aux = list(valores_totales.items())
-    aux.sort(key = lambda x: x[1]) 
+        for i in range(50): #Varios random walks por cada vértice
+
+            valores_actuales = random_walk(grafo, v, rango, 0, valores)
+
+            for w, valor in valores_actuales.items():
+                valores_totales[w] = valores_totales.get(w, 0) + valor  
+
+    valores_finales = {} #Elimino los dados por parámetro
+
+    for v, valor in valores_totales.items():
+        if v not in vertices:
+            valores_finales[v] = valor
+
+    aux = list(valores_finales.items())
+    aux.sort(key = lambda x: x[1] , reverse = True) 
 
     if pertenece is not None:
         vertices = [v for v, _ in aux if pertenece(v)][:n]
