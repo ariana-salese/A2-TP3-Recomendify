@@ -137,11 +137,13 @@ def procesar_entrada(ruta_archivo, pagerank):
         cadenas = linea.split()
         comando = cadenas[0]
     
-        if comando == CAMINO and grafo_usuarios is None: 
+        if comando in (CAMINO, RECOMENDACION, MAS_IMPORTANTES) and grafo_usuarios is None: 
             grafo_usuarios = graphutil.crear_grafo_bipartito_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
+            print("cree grafo")
 
-        if comando in (MAS_IMPORTANTES, CICLO, CLUSTERING, RANGO) and grafo_canciones is None:
+        if comando in (CICLO, CLUSTERING, RANGO) and grafo_canciones is None:
             grafo_canciones = graphutil.crear_grafo_con_archivo(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
+            print("cree grafo")
 
         if comando == CAMINO:
             origen, ultimo_indice = strutil.concatenar_cadenas(cadenas, 1, SEP_CANCIONES)
@@ -176,7 +178,7 @@ def procesar_entrada(ruta_archivo, pagerank):
             
             nombre_cancion, artista = cancion.split(SEP_CANCION_ARTISTA)
 
-            print(biblioteca.cantidad_en_rango(grafo_canciones, int(cadenas[INDICE_N]), (nombre_cancion, artista)))
+            print(graphutil.cantidad_en_rango(grafo_canciones, int(cadenas[INDICE_N]), (nombre_cancion, artista)))
         
         elif comando == CLUSTERING:
             if (len(cadenas)) == 1: 

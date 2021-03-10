@@ -53,7 +53,7 @@ class Grafo:
 
     def agregar_arista(self, v, w, peso = 0):
         '''
-        Agrega la arista v--peso--w o v<-peso->w en caso de ser dirigido.
+        Agrega la arista v--peso--w o v--peso->w en caso de ser dirigido.
         Si no se recibe peso se le asiga peso cero.
 
         Levanta error si: uno o ambos vertices no existen.
