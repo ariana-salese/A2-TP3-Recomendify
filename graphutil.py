@@ -9,6 +9,8 @@ from datetime import datetime
 csv.field_size_limit(sys.maxsize)
 
 D = 0.85
+ITERACIONES_PRP = 350 #PRP = Page Rank Personalizado
+RANDOM_WALKS_PRP = 50 
 
 def crear_grafo_bipartito_con_archivo(ruta_archivo, param_1, param_2, param_3, param_4):
     '''
@@ -268,7 +270,8 @@ def _pagerank(grafo, dict_pgrnk, padres, n, cont = 0):
 
 def random_walk(grafo, v, rango, rango_act, valores):
     '''
-    documetacion
+    Realiza un camino aleatorio y define valores del 0 a 1
+    segun cuan probable es llegar a estos vertices desde el vertice v.
     '''
 
     if rango_act == rango: return valores
@@ -289,18 +292,18 @@ def random_walk(grafo, v, rango, rango_act, valores):
 
 def pagerank_personzalido(grafo, vertices, n, pertenece = None):
     '''
-    documentacion
+    Devuelve una lista de n vertices que mas se relacionan con los vertices pasados 
+    por paramtro
     '''
-    rango = 350 #no tengo ni idea de porque puse esto asi
-    #print(f"el rango es {rango}")
+
     valores_totales = {}
 
     for v in vertices:
         valores = {}
 
-        for i in range(50): #Varios random walks por cada vértice
+        for i in range(RANDOM_WALKS_PRP): #Varios random walks por cada vértice
 
-            valores_actuales = random_walk(grafo, v, rango, 0, valores)
+            valores_actuales = random_walk(grafo, v, ITERACIONES_PRP, 0, valores)
 
             for w, valor in valores_actuales.items():
                 valores_totales[w] = valores_totales.get(w, 0) + valor  
