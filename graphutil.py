@@ -243,7 +243,13 @@ def pagerank(grafo):
         for hijo in grafo.obtener_adyacentes(nodo):
             padres[hijo].append(nodo)
 
-    result = _pagerank(grafo, dict_pgrnk, padres, 5)
+    result_raw = _pagerank(grafo, dict_pgrnk, padres, 100)
+
+    result = {}
+
+    for clave, valor in result_raw.items():
+        if isinstance(clave, tuple):
+            result[clave] = valor
 
     return [dato[0] for dato in sorted(result.items(), key=lambda x: x[1], reverse=True)]
 
@@ -262,7 +268,7 @@ def _pagerank(grafo, dict_pgrnk, padres, n, cont = 0):
     cont+= 1
         
     if cont < n:
-        _pagerank(grafo, new_dict_pgrnk, padres, n, cont)
+        return _pagerank(grafo, new_dict_pgrnk, padres, n, cont)
 
     return new_dict_pgrnk
 
