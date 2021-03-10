@@ -54,11 +54,14 @@ def crear_grafo_con_archivo(ruta_archivo, param_1, param_2, param_3):
             grupo_actual = datos.get(grupo, [])
 
             for w in grupo_actual: 
+                if w == vertice: continue
+
                 if not grafo.estan_unidos(vertice, w):
                     grafo.agregar_arista(vertice, w)
             
-            grupo_actual.append(vertice)
-            datos[grupo] = grupo_actual
+            if vertice not in grupo_actual: 
+                grupo_actual.append(vertice)
+                datos[grupo] = grupo_actual
 
     return grafo
 
@@ -246,7 +249,7 @@ def pagerank(grafo):
 
 
 def _pagerank(grafo, dict_pgrnk, padres, n, cont = 0):
-   
+
     new_dict_pgrnk = {}
 
     for nodo in dict_pgrnk:
@@ -261,4 +264,53 @@ def _pagerank(grafo, dict_pgrnk, padres, n, cont = 0):
         return _pagerank(grafo, new_dict_pgrnk, padres, n, cont)
 
     return new_dict_pgrnk
+
+
+def random_walk(grafo, v, rango, rango_act, valores):
+    '''
+    documetacion
+    '''
+
+    if rango_act == rango: return valores
+
+    adyacentes_v = grafo.obtener_adyacentes(v)
+    valor_a_sumar = valores[v] // len(adyacentes_v)
+
+    w = grafo.obtener_adyacente_random(v)
+    
+    valor_w = valores.get(w, 0)
+    valor_w += valor_a_sumar
+    valores[w] = valor_w
+
+    return random_walk(grafo, w, rango, rango_act + 1, valores)
+
+
+def pagerank_personzalido(grafo, vertices, n, pertenece = None):
+    '''
+    documentacion
+    '''
+    rango = len(vertices) * n #no tengo ni idea de porque puse esto asi
+    #print(f"el rango es {rango}")
+    valores_totales = {}
+
+    for v in vertices:
+        valores = {}
+        valores[v] = 1
+        
+        valores_actuales = random_walk(grafo, v, rango, 0, valores)
+
+        for w, valor in valores_actuales.items():
+            valor_w = valores_totales.get(w, 0)
+            valor_w += valor
+            valores_totales[w] = valor_w
+    
+    aux = list(valores_totales.items())
+    aux.sort(key = lambda x: x[1]) 
+
+    if pertenece is not None:
+        vertices = [v for v, _ in aux if pertenece(v)][:n]
+    else:
+        vertices = [v for v, _ in aux][:n]
+
+    return vertices
 

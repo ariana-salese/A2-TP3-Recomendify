@@ -31,6 +31,22 @@ INDICE_ARTISTA = 1
 INDICE_N = 1
 INDICE_USUARIO_O_CANCION = 1
 
+#ELEMENTOS
+CANCIONES = 'canciones'
+USUARIOS = 'usuarios'
+
+'''
+-----------------------------------------------------------------
+                    FUNCIONES AUXILIARES
+-----------------------------------------------------------------
+'''
+
+def es_cancion(v):
+    return type(v) is tuple
+
+def es_usuario(v):
+    return type(v) is str
+
 '''
 -----------------------------------------------------------------
                           COMANDOS
@@ -87,16 +103,22 @@ def mas_importantes(grafo_usuarios, n, pagerank):
     if not pagerank:
         pagerank = graphutil.pagerank(grafo_usuarios)
 
-    strutil.imprimir_lista(pagerank[:n], SEP_CANCION_ARTISTA, "; ")
+    strutil.imprimir_lista_de_tuplas(pagerank[:n], SEP_CANCION_ARTISTA, "; ")
 
     return pagerank
 
 
-def recomendacion(usuario_cancion, n):
+def recomendacion(grafo_usuarios, usuario_cancion, n, lista):
     '''
     documentacion
     '''
-    pass
+    if usuario_cancion == CANCIONES: funcion = es_cancion
+    else: funcion = es_usuario
+
+    recomendaciones = graphutil.pagerank_personzalido(grafo_usuarios, lista, n, funcion)
+
+    if usuario_cancion == CANCIONES: strutil.imprimir_lista_de_tuplas(recomendaciones, SEP_CANCION_ARTISTA, "; ")
+    else: strutil.imprimir_lista(recomendaciones, '; ')
 
 
 def ciclo(grafo_canciones, n, cancion):
@@ -119,7 +141,7 @@ def ciclo(grafo_canciones, n, cancion):
         print(mensajes.ENOENT_RECORRIDO)
         return 
     
-    strutil.imprimir_lista(ciclo, SEP_CANCION_ARTISTA, " --> ", True)
+    strutil.imprimir_lista_de_tuplas(ciclo, SEP_CANCION_ARTISTA, " --> ", True)
 
 '''
 -----------------------------------------------------------------
@@ -139,11 +161,11 @@ def procesar_entrada(ruta_archivo, pagerank):
 
         if comando in (CAMINO, RECOMENDACION, MAS_IMPORTANTES) and grafo_usuarios is None: 
             grafo_usuarios = graphutil.crear_grafo_bipartito_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
-            #print("cree grafo")
+            print("cree grafo")
 
         if comando in (CICLO, CLUSTERING, RANGO) and grafo_canciones is None:
             grafo_canciones = graphutil.crear_grafo_con_archivo(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
-            #print("cree grafo")
+            print("cree grafo")
 
         if comando == CAMINO:
             origen, ultimo_indice = strutil.concatenar_cadenas(cadenas, 1, SEP_CANCIONES)
@@ -163,9 +185,19 @@ def procesar_entrada(ruta_archivo, pagerank):
         
         elif comando == MAS_IMPORTANTES:
             pagerank = mas_importantes(grafo_usuarios, int(cadenas[INDICE_N]), pagerank)
-        
+
         elif comando == RECOMENDACION:
-            print("INCOMPLETO")
+            lista = []
+            ultimo_indice = 2
+
+            while ultimo_indice != len(cadenas) - 1:
+
+                cancion, ultimo_indice = strutil.concatenar_cadenas(cadenas, ultimo_indice + 1, SEP_CANCIONES)
+                nombre, artista = cancion.split(SEP_CANCION_ARTISTA)
+        
+                lista.append((nombre, artista))
+
+            recomendacion(grafo_usuarios, cadenas[1], int(cadenas[2]), lista)
 
         elif comando == CICLO:
             cancion, _ = strutil.concatenar_cadenas(cadenas, 2)
@@ -186,7 +218,7 @@ def procesar_entrada(ruta_archivo, pagerank):
             else:
                 cancion, _= strutil.concatenar_cadenas(cadenas, 1)
                 nombre_cancion, artista = cancion.split(SEP_CANCION_ARTISTA)
-                
+
                 coeficiente = graphutil.clustering_vertice(grafo_canciones, (nombre_cancion, artista))
         
             print(strutil.redondear(coeficiente, 3))
