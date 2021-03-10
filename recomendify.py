@@ -87,7 +87,7 @@ def mas_importantes(grafo_usuarios, n, pagerank):
     if not pagerank:
         pagerank = graphutil.pagerank(grafo_usuarios)
 
-    strutil.imprimir_lista(pagerank[:n], SEP_CANCION_ARTISTA, ";")
+    strutil.imprimir_lista(pagerank[:n], SEP_CANCION_ARTISTA, "; ")
 
     return pagerank
 
