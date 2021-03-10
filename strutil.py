@@ -27,7 +27,7 @@ def imprimir_lista(lista, sep_int, sep_ext, repetir_primero = False):
     print(f"{lista[0][0]}{sep_int}{lista[0][1]}", end='')
 
     for i in range(1, len(lista)):
-        print(f"{sep_ext} ", end = '')
+        print(f"{sep_ext}", end = '')
         param_1, param_2 = lista[i]
         print(f"{param_1}{sep_int}{param_2}", end = '')
 

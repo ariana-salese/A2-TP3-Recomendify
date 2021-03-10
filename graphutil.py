@@ -206,6 +206,8 @@ def clustering_vertice(grafo, vertice):
 
     for w in ady:
         for x in grafo.obtener_adyacentes(w):
+            if x == vertice: continue
+            
             if x in ady: cant_conecciones += 1
 
     return (cant_conecciones) / (cant_ady * (cant_ady - 1))
