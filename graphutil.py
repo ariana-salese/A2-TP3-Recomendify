@@ -255,7 +255,7 @@ def pagerank(grafo):
 
 
 def _pagerank(grafo, dict_pgrnk, padres, n, cont = 0):
-    #print("iter")
+   
     new_dict_pgrnk = {}
 
     for nodo in dict_pgrnk:
@@ -263,7 +263,6 @@ def _pagerank(grafo, dict_pgrnk, padres, n, cont = 0):
         for padre in padres[nodo]:
             pgrnk_sum += dict_pgrnk[padre] / len(grafo.obtener_adyacentes(padre))
         new_dict_pgrnk[nodo] = ((1 - D) / len(grafo)) + D * pgrnk_sum
-        #new_dict_pgrnk[nodo] = pgrnk_sum
 
     cont+= 1
         
