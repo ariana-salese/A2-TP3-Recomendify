@@ -79,13 +79,13 @@ def camino(grafo_usuarios, origen, destino):
 
     print("")
 
-def mas_importantes(grafo_canciones, n, pagerank):
+def mas_importantes(grafo_usuarios, n, pagerank):
     '''
     Imprime por pantalla las canciones más importantes según el algoritmo "Pagerank"
     '''
         
     if not pagerank:
-        pagerank = graphutil.pagerank(grafo_canciones)
+        pagerank = graphutil.pagerank(grafo_usuarios)
 
     strutil.imprimir_lista(pagerank[:n], SEP_CANCION_ARTISTA, ";")
 
@@ -136,14 +136,14 @@ def procesar_entrada(ruta_archivo, pagerank):
         linea = linea.rstrip("\n")
         cadenas = linea.split()
         comando = cadenas[0]
-    
+
         if comando in (CAMINO, RECOMENDACION, MAS_IMPORTANTES) and grafo_usuarios is None: 
             grafo_usuarios = graphutil.crear_grafo_bipartito_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
-            print("cree grafo")
+            #print("cree grafo")
 
         if comando in (CICLO, CLUSTERING, RANGO) and grafo_canciones is None:
             grafo_canciones = graphutil.crear_grafo_con_archivo(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
-            print("cree grafo")
+            #print("cree grafo")
 
         if comando == CAMINO:
             origen, ultimo_indice = strutil.concatenar_cadenas(cadenas, 1, SEP_CANCIONES)
@@ -162,7 +162,7 @@ def procesar_entrada(ruta_archivo, pagerank):
             camino(grafo_usuarios, (nombre_cancion_origen, artista_origen), (nombre_cancion_destino, artista_destino))
         
         elif comando == MAS_IMPORTANTES:
-            pagerank = mas_importantes(grafo_canciones, int(cadenas[INDICE_N]), pagerank)
+            pagerank = mas_importantes(grafo_usuarios, int(cadenas[INDICE_N]), pagerank)
         
         elif comando == RECOMENDACION:
             print("INCOMPLETO")
