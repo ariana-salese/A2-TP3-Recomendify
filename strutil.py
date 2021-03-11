@@ -36,6 +36,7 @@ def imprimir_lista_de_tuplas(lista, sep_int, sep_ext, repetir_primero = False):
     else:
         print("")
 
+
 def imprimir_lista(lista, separador):
     '''
     Recibe una lista e imprime en una sola linea toda la lista separando cada elemento

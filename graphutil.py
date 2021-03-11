@@ -4,7 +4,6 @@ from csv import DictReader
 import sys
 import csv
 from strutil import redondear
-from datetime import datetime
 
 csv.field_size_limit(sys.maxsize)
 
