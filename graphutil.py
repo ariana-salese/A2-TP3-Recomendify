@@ -162,7 +162,7 @@ def reconstruir_camino(grafo, padre, destino):
 
 def cantidad_en_rango(grafo, n, origen):
     '''
-    Devuelve la cantidad de vertices que se encuentran como minimo a n aristas 
+    Devuelve la cantidad de vertices que se encuentran exactamente a n aristas 
     del vertice v. 
     '''
 
@@ -293,7 +293,7 @@ def random_walk(grafo, v, rango, rango_act, valores):
 def pagerank_personzalido(grafo, vertices, n, pertenece = None):
     '''
     Devuelve una lista de n vertices que mas se relacionan con los vertices pasados 
-    por paramtro
+    por parametro
     '''
 
     valores_totales = {}
