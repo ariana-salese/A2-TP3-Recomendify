@@ -2,9 +2,7 @@
 
 import graphutil
 import sys
-import mensajes
 import strutil
-from datetime import datetime
 
 # HEADERS
 USER_ID = 'USER_ID'
@@ -24,15 +22,21 @@ CLUSTERING = "clustering"
 # CARACTERES 
 SEP_CANCIONES = '>>>>'
 SEP_CANCION_ARTISTA = ' - '
+DECIMALES_CLUSTERING = 3
 
 # INDICES
 INDICE_CANCION = 0
+INDICE_COMANDO = 0
 INDICE_ARTISTA = 1
 INDICE_N = 1
 INDICE_USUARIO_O_CANCION = 1
 
 #ELEMENTOS
 CANCIONES = 'canciones'
+
+#MENSAJES
+ENOENT_COMANDO = "No existe el comando ingresando"
+ENOENT_RECORRIDO = "No se encontro recorrido"
 
 '''
 -----------------------------------------------------------------
@@ -94,6 +98,7 @@ def camino(grafo_usuarios, origen, destino):
 
     print("")
 
+
 def mas_importantes(grafo_usuarios, n, pagerank):
     '''
     Imprime por pantalla las canciones más importantes según el algoritmo "Pagerank"
@@ -107,16 +112,18 @@ def mas_importantes(grafo_usuarios, n, pagerank):
     return pagerank
 
 
-def recomendacion(grafo_usuarios, usuario_cancion, n, lista):
+def recomendacion(grafo_usuarios, elemento, n, lista):
     '''
-    documentacion
+    Si el elemento recibido es canciones se imprime una lista de canciones que son similares
+    a las recibidas en las lista. 
+    Si el elemento recibido es usuarios se devuelven usuarios similares. 
     '''
-    if usuario_cancion == CANCIONES: funcion = es_cancion
+    if elemento == CANCIONES: funcion = es_cancion
     else: funcion = es_usuario
 
     recomendaciones = graphutil.pagerank_personzalido(grafo_usuarios, lista, n, funcion)
 
-    if usuario_cancion == CANCIONES: strutil.imprimir_lista_de_tuplas(recomendaciones, SEP_CANCION_ARTISTA, "; ")
+    if elemento == CANCIONES: strutil.imprimir_lista_de_tuplas(recomendaciones, SEP_CANCION_ARTISTA, "; ")
     else: strutil.imprimir_lista(recomendaciones, '; ')
 
 
@@ -131,13 +138,13 @@ def ciclo(grafo_canciones, n, cancion):
     '''
     
     if not grafo_canciones.existe_vertice(cancion):
-        print(mensajes.ENOENT_RECORRIDO)
+        print(ENOENT_RECORRIDO)
         return 
 
     ciclo = graphutil.ciclo_largo_n(grafo_canciones, n, cancion)
 
     if ciclo is None: 
-        print(mensajes.ENOENT_RECORRIDO)
+        print(ENOENT_RECORRIDO)
         return 
     
     strutil.imprimir_lista_de_tuplas(ciclo, SEP_CANCION_ARTISTA, " --> ", True)
@@ -156,7 +163,7 @@ def procesar_entrada(ruta_archivo, pagerank):
     for linea in sys.stdin:
         linea = linea.rstrip("\n")
         cadenas = linea.split()
-        comando = cadenas[0]
+        comando = cadenas[INDICE_COMANDO]
 
         if comando in (CAMINO, RECOMENDACION, MAS_IMPORTANTES) and grafo_usuarios is None: 
             grafo_usuarios = graphutil.crear_grafo_bipartito_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
@@ -218,9 +225,9 @@ def procesar_entrada(ruta_archivo, pagerank):
 
                 coeficiente = graphutil.clustering_vertice(grafo_canciones, (nombre_cancion, artista))
         
-            print(strutil.redondear(coeficiente, 3))
+            print(strutil.redondear(coeficiente, DECIMALES_CLUSTERING))
 
-        else: print(mensajes.ENOENT_COMANDO)
+        else: print(ENOENT_COMANDO)
 
 '''
 -----------------------------------------------------------------
