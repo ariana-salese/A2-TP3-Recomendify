@@ -162,7 +162,7 @@ def procesar_entrada(ruta_archivo, pagerank):
             grafo_usuarios = graphutil.crear_grafo_bipartito_con_archivo(ruta_archivo, USER_ID, PLAYLIST_NAME, TRACK_NAME, ARTIST)
 
         if comando in (CICLO, CLUSTERING, RANGO) and grafo_canciones is None:
-            grafo_canciones = graphutil.crear_grafo_con_archivo(ruta_archivo, PLAYLIST_ID, TRACK_NAME, ARTIST)
+            grafo_canciones = graphutil.crear_grafo_con_archivo(ruta_archivo, PLAYLIST_NAME, TRACK_NAME, ARTIST)
 
         if comando == CAMINO:
             origen, ultimo_indice = strutil.concatenar_cadenas(cadenas, 1, SEP_CANCIONES)
