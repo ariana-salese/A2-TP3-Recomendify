@@ -7,3 +7,5 @@ Nos interesa modelar y entender cómo están compuestas las playlists, si un usu
 
 *Datos disponibles*
 Trabajamos con una ínfima porción de datos obtenidos de una competencia pública realizada por la plataforma Spotify en 2018. Cuenta con cerca de 2 millones de entradas.
+
+Para trabajar con estos datos se implementó un grafo y se utilizaron algoritmos como Bellman-Ford para procesarlos
